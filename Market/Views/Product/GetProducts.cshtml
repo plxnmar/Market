@@ -1,0 +1,12 @@
+﻿@model List<Market.Domain.Entity.Product>
+
+
+@{
+	foreach (var product in Model)
+	{
+		<p>@product.Name</p>
+		<p>@product.Description</p>
+		<p>@product.Price</p>
+	}
+}
+

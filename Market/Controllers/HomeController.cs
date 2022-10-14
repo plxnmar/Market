@@ -11,26 +11,14 @@ namespace Market.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        //public HomeController(ILogger<HomeController> logger)
-        //{
-        //    _logger = logger;
-        //}
-        public HomeController(IProductRepository productRepository)
+        public HomeController(ILogger<HomeController> logger)
         {
-            this.productRepository = productRepository;
+            _logger = logger;
         }
-
-        private readonly IProductRepository productRepository;
-        public async Task<IActionResult> Index()
+      
+        public IActionResult Index()
         {
-            var response = await productRepository.GetAll();
             return View();
-            //Product product = new Product()
-            //{
-            //    Name = "Яблоко",
-            //    Price = 100
-            //};
-            //  return View(product);
         }
 
         public IActionResult Privacy()
