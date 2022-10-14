@@ -1,4 +1,5 @@
-﻿using Market.Models;
+﻿using Market.Domain.Entity;
+using Market.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,7 +16,12 @@ namespace Market.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            Product product = new Product()
+            {
+                Name = "Яблоко",
+                Price = 100
+            };
+            return View(product);
         }
 
         public IActionResult Privacy()
