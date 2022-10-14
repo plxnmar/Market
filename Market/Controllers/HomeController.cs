@@ -1,7 +1,9 @@
-﻿using Market.Domain.Entity;
+﻿using Market.DAL.Interfaces;
+using Market.Domain.Entity;
 using Market.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Market.Controllers
 {
@@ -9,19 +11,26 @@ namespace Market.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        //public HomeController(ILogger<HomeController> logger)
+        //{
+        //    _logger = logger;
+        //}
+        public HomeController(IProductRepository productRepository)
         {
-            _logger = logger;
+            this.productRepository = productRepository;
         }
 
-        public IActionResult Index()
+        private readonly IProductRepository productRepository;
+        public async Task<IActionResult> Index()
         {
-            Product product = new Product()
-            {
-                Name = "Яблоко",
-                Price = 100
-            };
-            return View(product);
+            var response = await productRepository.GetAll();
+            return View();
+            //Product product = new Product()
+            //{
+            //    Name = "Яблоко",
+            //    Price = 100
+            //};
+            //  return View(product);
         }
 
         public IActionResult Privacy()

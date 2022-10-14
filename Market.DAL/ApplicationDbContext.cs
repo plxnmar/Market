@@ -17,5 +17,16 @@ namespace Market.DAL
         }
 
         public DbSet<Product> Products { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Product>().HasData(
+                    new Product { Id = 1, Name = "Банан", Description="111", Price=111}
+                    //new Product { Id = 2, Name = "Булочка с корицей" },
+                    //new Product { Id = 3, Name = "Морковка" }
+            );
+        }
+
     }
 }

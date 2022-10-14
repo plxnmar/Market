@@ -1,4 +1,6 @@
 using Market.DAL;
+using Market.DAL.Interfaces;
+using Market.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -16,6 +18,9 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 // добавляем контекст ApplicationContext в качестве сервиса в приложение
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
 //services.AddControllersWithViews();
+
+//регистрация интерфейса IProductRepository с классом репозитория
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 
@@ -37,5 +42,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// получение данных
+//app.MapGet("/", (ApplicationDbContext db) => db.Products.ToList());
+
 
 app.Run();
