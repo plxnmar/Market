@@ -18,14 +18,17 @@ namespace Market.DAL.Repositories
             db = dbContext;
         }
 
-        public bool Add(Product entity)
+        public async Task<bool> Add(Product entity)
         {
-            throw new NotImplementedException();
+            await db.Products.AddAsync(entity);
+            await db.SaveChangesAsync();
+
+            return true;
         }
 
-        public Product Get(int id)
+        public async Task<Product> Get(int id)
         {
-            throw new NotImplementedException();
+            return await db.Products.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public Task<List<Product>> GetAll()
@@ -33,9 +36,12 @@ namespace Market.DAL.Repositories
             return db.Products.ToListAsync();
         }
 
-        public bool Remove(Product entity)
+        public async Task<bool> Remove(Product entity)
         {
-            throw new NotImplementedException();
+            db.Products.Remove(entity);
+            await db.SaveChangesAsync();
+            return true;
+
         }
     }
 }
