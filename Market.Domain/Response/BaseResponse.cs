@@ -2,7 +2,7 @@
 
 namespace Market.Domain.Response
 {
-    public class BaseResponse<T> : IBasePesponse<T>
+    public class BaseResponse<T> : IBaseResponse<T>
     {
         //описание ошибки/предупреждения
         public string Desciption { get; set; }
@@ -13,7 +13,7 @@ namespace Market.Domain.Response
         public T Data { get; }
     }
 
-    public interface IBasePesponse<T>
+    public interface IBaseResponse<T>
     {
         T Data { get; }
     }
