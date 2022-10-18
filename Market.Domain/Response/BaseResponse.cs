@@ -7,14 +7,17 @@ namespace Market.Domain.Response
         //описание ошибки/предупреждения
         public string Desciption { get; set; }
 
-        //код ошибки
         public StatusCode StatusCode { get; set; }
-        
-        public T Data { get; }
+
+        public T Data { get; set; }
+
     }
 
     public interface IBaseResponse<T>
     {
-        T Data { get; }
+        //код ошибки
+        public StatusCode StatusCode { get; set; }
+
+        public T Data { get; set; }
     }
 }

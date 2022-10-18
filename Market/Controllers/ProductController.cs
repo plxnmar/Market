@@ -1,22 +1,29 @@
 ﻿using Market.DAL.Interfaces;
+using Market.Domain.Response;
+using Market.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers
 {
     public class ProductController : Controller
-    { 
-        private readonly IProductRepository productRepository;
+    {
+        private readonly IProductService productService;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductService productService)
         {
-            this.productRepository = productRepository;
+            this.productService = productService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetProducts()
         {
-            var products = await productRepository.GetAll();
-            return View(products);
+            var response = await productService.GetProducts();
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                return View(response.Data);
+            }
+            return RedirectToAction("Error");
+
         }
     }
 }

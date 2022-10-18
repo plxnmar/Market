@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Market.Service.Implementatins
 {
-    internal class ProductService : IProductService
+    public class ProductService : IProductService
     {
         private readonly IProductRepository productRepository;
 
@@ -28,8 +28,11 @@ namespace Market.Service.Implementatins
                 if (products.Count == 0)
                 {
                     baseResponse.Desciption = "[GetProducrs] : Найдено 0 элементов";
-                    baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
+                  
                 }
+
+                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
+                baseResponse.Data = products;
             }
             catch (Exception ex)
             {

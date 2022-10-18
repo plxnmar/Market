@@ -1,6 +1,8 @@
 using Market.DAL;
 using Market.DAL.Interfaces;
 using Market.DAL.Repositories;
+using Market.Service.Implementatins;
+using Market.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -21,6 +23,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 
 //регистрация интерфейса IProductRepository с классом репозитория
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+//подключение сервиса продукта
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 
