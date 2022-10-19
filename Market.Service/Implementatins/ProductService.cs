@@ -19,6 +19,27 @@ namespace Market.Service.Implementatins
             this.productRepository = productRepository;
         }
 
+        public async Task<IBaseResponse<Product>> GetProduct(int id)
+        {
+            var baseResponse = new BaseResponse<Product>();
+            try
+            {
+                var product = await productRepository.Get(id);
+                if (product == null)
+                {
+                    baseResponse.Desciption = "Продукт не найден";
+                    baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
+                }
+                baseResponse.Data = product;
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[GetProducr] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+            }
+            return baseResponse;
+        }
+
         public async Task<IBaseResponse<IEnumerable<Product>>> GetProducts()
         {
             var baseResponse = new BaseResponse<IEnumerable<Product>>();
@@ -28,7 +49,6 @@ namespace Market.Service.Implementatins
                 if (products.Count == 0)
                 {
                     baseResponse.Desciption = "[GetProducrs] : Найдено 0 элементов";
-                  
                 }
 
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
@@ -36,10 +56,42 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetProducrs] : {ex.Message}";               
+                baseResponse.Desciption = $"[GetProducrs] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
 
             return baseResponse;
+        }
+
+        public async Task<IBaseResponse<bool>> DeleteProduct(int id)
+        {
+            var baseResponse = new BaseResponse<bool>();
+            try
+            {
+                var product = await productRepository.Get(id);
+                baseResponse.Data = true;
+
+                if (product == null)
+                {
+                    baseResponse.Desciption = "Продукт не найден";
+                    baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
+                    baseResponse.Data = false;
+                }
+
+                await productRepository.Remove(product);
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[DeleteProduct] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+            }
+            return baseResponse;
+        }
+
+
+        public async Task<IBaseResponse<bool>> CreateProduct(object obj)
+        {
+            throw new NotImplementedException();
         }
     }
 }
