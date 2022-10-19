@@ -43,5 +43,13 @@ namespace Market.DAL.Repositories
             return true;
 
         }
+
+        public async Task<Product> Update(Product entity)
+        {
+            db.Products.Update(entity);
+            await db.SaveChangesAsync();
+
+            return entity;
+        }
     }
 }

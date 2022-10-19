@@ -16,5 +16,6 @@ namespace Market.Service.Interfaces
         Task<IBaseResponse<Product>> GetProduct(int id);
         Task<IBaseResponse<bool>> DeleteProduct(int id);
         Task<IBaseResponse<bool>> AddProduct(ProductViewModel productViewModel);
+        Task<IBaseResponse<Product>> EditProduct(int id, ProductViewModel model);
     }
 }

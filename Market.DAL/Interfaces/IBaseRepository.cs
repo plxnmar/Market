@@ -12,5 +12,6 @@ namespace Market.DAL.Interfaces
         Task<bool> Add(T entity);
         Task<bool> Remove(T entity);
         Task<List<T>> GetAll();
+        Task<T> Update(T entity);
     }
 }

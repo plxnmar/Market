@@ -89,7 +89,6 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
-
         public async Task<IBaseResponse<bool>> AddProduct(ProductViewModel productViewModel)
         {
             var baseResponse = new BaseResponse<bool>();
@@ -109,6 +108,36 @@ namespace Market.Service.Implementatins
             catch (Exception ex)
             {
                 baseResponse.Desciption = $"[CreateProduct] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+            }
+            return baseResponse;
+        }
+
+        public async Task<IBaseResponse<Product>> EditProduct(int id, ProductViewModel model)
+        {
+            var baseResponse = new BaseResponse<Product>();
+            try
+            {
+                var product = await productRepository.Get(id);
+                if (product == null)
+                {
+                    baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
+                    baseResponse.Desciption = "Продукт не найден";
+                    return baseResponse;
+                }
+
+                product.Description = model.Description;
+                product.Price = model.Price;
+                product.Id = model.Id;
+                product.Name = model.Name;
+                product.TypeProduct = model.TypeProduct;
+
+                await productRepository.Update(product);
+                return baseResponse;
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[EditProduct] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
