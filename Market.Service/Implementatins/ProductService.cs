@@ -26,11 +26,13 @@ namespace Market.Service.Implementatins
             try
             {
                 var product = await productRepository.Get(id);
+
                 if (product == null)
                 {
                     baseResponse.Desciption = "Продукт не найден";
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
                 }
+                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
                 baseResponse.Data = product;
             }
             catch (Exception ex)

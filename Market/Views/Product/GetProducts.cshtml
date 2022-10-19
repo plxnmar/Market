@@ -1,12 +1,28 @@
 ﻿@model IEnumerable<Market.Domain.Entity.Product>
 
+<div class="row row-cols-1 row-cols-md-3 g-4">
+	@{
+		foreach (var product in Model)
+		{
+		//<p>@product.Name</p>
+			//<p>@product.Description</p>
+			//<p>@product.Price</p>
 
-@{
-	foreach (var product in Model)
-	{
-		<p>@product.Name</p>
-		<p>@product.Description</p>
-		<p>@product.Price</p>
+
+			<div class="col">
+				<div class="card" style="width: 18rem;">
+					<img src="..." class="card-img-top" alt="...">
+					<div class="card-body">
+						<h5 class="card-title">@product.Name</h5>
+						<p class="card-text">@product.Price</p>
+						<p class="card-text">@product.Description</p>
+						<a href="#" class="btn btn-success">В корзину</a>
+						<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-secondary">Подробнее</a>
+					</div>
+				</div>
+			</div>
+		}
 	}
-}
+</div>
+
 
