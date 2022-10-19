@@ -1,6 +1,7 @@
 ﻿using Market.DAL.Interfaces;
 using Market.Domain.Entity;
 using Market.Domain.Response;
+using Market.Domain.ViewModels.Product;
 using Market.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -89,9 +90,28 @@ namespace Market.Service.Implementatins
         }
 
 
-        public async Task<IBaseResponse<bool>> CreateProduct(object obj)
+        public async Task<IBaseResponse<bool>> AddProduct(ProductViewModel productViewModel)
         {
-            throw new NotImplementedException();
+            var baseResponse = new BaseResponse<bool>();
+            try
+            {
+                var product = new Product()
+                {
+                    Description = productViewModel.Description,
+                    TypeProduct = productViewModel.TypeProduct,
+                    Price = productViewModel.Price,
+                    Name = productViewModel.Name
+                };
+
+                await productRepository.Add(product);
+
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[CreateProduct] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+            }
+            return baseResponse;
         }
     }
 }
