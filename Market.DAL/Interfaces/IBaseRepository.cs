@@ -9,9 +9,9 @@ namespace Market.DAL.Interfaces
     public interface IBaseRepository<T>
     {
         Task<T> Get(int id);
-        Task<bool> Add(T entity);
+        Task<bool> Create(T entity);
         Task<bool> Remove(T entity);
-        Task<List<T>> GetAll();
+        IQueryable<T> GetAll();
         Task<T> Update(T entity);
     }
 }

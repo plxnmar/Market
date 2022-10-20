@@ -18,7 +18,7 @@ namespace Market.DAL.Repositories
             db = dbContext;
         }
 
-        public async Task<bool> Add(Product entity)
+        public async Task<bool> Create(Product entity)
         {
             await db.Products.AddAsync(entity);
             await db.SaveChangesAsync();
@@ -31,9 +31,9 @@ namespace Market.DAL.Repositories
             return await db.Products.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<List<Product>> GetAll()
+        public IQueryable<Product> GetAll()
         {
-            return db.Products.ToListAsync();
+            return db.Products;
         }
 
         public async Task<bool> Remove(Product entity)

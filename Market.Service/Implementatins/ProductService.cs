@@ -48,8 +48,8 @@ namespace Market.Service.Implementatins
             var baseResponse = new BaseResponse<IEnumerable<Product>>();
             try
             {
-                var products = await productRepository.GetAll();
-                if (products.Count == 0)
+                var products = productRepository.GetAll();
+                if (products.Count() == 0)
                 {
                     baseResponse.Desciption = "[GetProducrs] : Найдено 0 элементов";
                 }
@@ -104,7 +104,7 @@ namespace Market.Service.Implementatins
                     Name = productViewModel.Name
                 };
 
-                await productRepository.Add(product);
+                await productRepository.Create(product);
 
             }
             catch (Exception ex)
