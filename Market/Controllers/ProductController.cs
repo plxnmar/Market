@@ -38,7 +38,7 @@ namespace Market.Controllers
             return RedirectToAction("Error");
         }
 
-        [Authorize(Roles = "Admin")]
+      //  [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var response = await productService.DeleteProduct(id);
@@ -50,8 +50,8 @@ namespace Market.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Save(int id)
+      //  [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> SaveProduct(int id)
         {
             //новый объект
             if (id == 0)
@@ -66,7 +66,7 @@ namespace Market.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(ProductViewModel model)
+        public async Task<IActionResult> SaveProduct(ProductViewModel model)
         {
             if (ModelState.IsValid)
             {
