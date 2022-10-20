@@ -13,6 +13,14 @@ namespace Market.Domain.Entity
         public string? Name { get; set; }
         public string? Description { get; set; }
         public decimal Price { get; set; }
-        public TypeProduct TypeProduct { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
+    }
+
+    public class Category
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public List<Product> Products { get; set; } = new List<Product>();
     }
 }

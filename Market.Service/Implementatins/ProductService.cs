@@ -99,7 +99,7 @@ namespace Market.Service.Implementatins
                 var product = new Product()
                 {
                     Description = productViewModel.Description,
-                    TypeProduct = productViewModel.TypeProduct,
+                   // Category = productViewModel.TypeProduct,
                     Price = productViewModel.Price,
                     Name = productViewModel.Name
                 };
@@ -132,7 +132,7 @@ namespace Market.Service.Implementatins
                 product.Price = model.Price;
                 product.Id = model.Id;
                 product.Name = model.Name;
-                product.TypeProduct = model.TypeProduct;
+              //  product.Category = model.TypeProduct;
 
                 await productRepository.Update(product);
                 return baseResponse;
