@@ -4,14 +4,10 @@
 	@{
 		foreach (var product in Model)
 		{
-		//<p>@product.Name</p>
-			//<p>@product.Description</p>
-			//<p>@product.Price</p>
-
-
-			<div class="col">
-				<div class="card" style="width: 18rem;">
-					<img src="..." class="card-img-top" alt="...">
+			<div class="card-group">
+				<div class="card">
+					<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
+				 	style="height:18rem; width:100%; object-fit: cover;">
 					<div class="card-body">
 						<h5 class="card-title">@product.Name</h5>
 						<p class="card-text">@product.Price</p>

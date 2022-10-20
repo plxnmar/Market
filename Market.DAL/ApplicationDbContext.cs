@@ -20,13 +20,13 @@ namespace Market.DAL
             //Category vegCategory = new Category() { Name = "Овощи" };
 
             //Product apple = new Product()
-            //{ Name = "Яблоко", Description = "Зеленое яблоко", Price = 50, Category = fruitCategory };
+            //{ Name = "Яблоко", Description = "Вкусное яблоко", Price = 50, Category = fruitCategory, ImgPath="/img/apple-red.jpg" };
 
             //Product bananna = new Product()
-            //{ Name = "Банан", Description = "Спелый банан", Price = 70, Category = fruitCategory };
+            //{ Name = "Банан", Description = "Спелый банан", Price = 70, Category = fruitCategory, ImgPath = "/img/bannana.jpg" };
 
             //Product potato = new Product()
-            //{ Name = "Картофель", Description = "Молодой картофель", Price = 30, Category = vegCategory };
+            //{ Name = "Картофель", Description = "Молодой картофель", Price = 30, Category = vegCategory, ImgPath = "/img/potato.jpg" };
 
             //this.Products.AddRange(apple, bananna, potato);
             //this.SaveChanges();
