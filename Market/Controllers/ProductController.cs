@@ -30,10 +30,22 @@ namespace Market.Controllers
             return RedirectToAction("Error");
         }
 
+
         [HttpGet]
         public async Task<IActionResult> GetProduct(int id)
         {
             var response = await productService.GetProduct(id);
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                return View(response.Data);
+            }
+            return RedirectToAction("Error");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductViewModel(int id)
+        {
+            var response = await productService.GetProductViewModel(id);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 return View(response.Data);
@@ -56,14 +68,15 @@ namespace Market.Controllers
         [HttpGet]
         public async Task<IActionResult> SaveProduct(int id)
         {
+            //получение всех категорий
+            var categories = (await categoryService.GetCategories()).Data.ToList();
+            ViewBag.Categories = categories;
+
             //новый объект
             if (id == 0)
                 return View();
 
-            var response = await productService.GetProduct(id);
-
-            var categories = (await categoryService.GetCategories()).Data.ToList();
-            ViewBag.Categories = categories;
+            var response = await productService.GetProductViewModel(id);
 
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {

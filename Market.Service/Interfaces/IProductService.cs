@@ -13,7 +13,8 @@ namespace Market.Service.Interfaces
     public interface IProductService
     {
         Task<IBaseResponse<IEnumerable<Product>>> GetProducts();
-        Task<IBaseResponse<ProductViewModel>> GetProduct(int id);
+        Task<IBaseResponse<ProductViewModel>> GetProductViewModel(int id);
+        Task<IBaseResponse<Product>> GetProduct(int id);
         Task<IBaseResponse<bool>> DeleteProduct(int id);
         Task<IBaseResponse<bool>> AddProduct(ProductViewModel productViewModel);
         Task<IBaseResponse<Product>> EditProduct(int id, ProductViewModel model);

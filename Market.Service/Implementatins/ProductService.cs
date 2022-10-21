@@ -20,7 +20,7 @@ namespace Market.Service.Implementatins
             this.productRepository = productRepository;
         }
 
-        public async Task<IBaseResponse<ProductViewModel>> GetProduct(int id)
+        public async Task<IBaseResponse<ProductViewModel>> GetProductViewModel(int id)
         {
             var baseResponse = new BaseResponse<ProductViewModel>();
             try
@@ -50,6 +50,30 @@ namespace Market.Service.Implementatins
             }
             return baseResponse;
         }
+
+        public async Task<IBaseResponse<Product>> GetProduct(int id)
+        {
+            var baseResponse = new BaseResponse<Product>();
+            try
+            {
+                var product = await productRepository.Get(id);
+
+                if (product == null)
+                {
+                    baseResponse.Desciption = "Продукт не найден";
+                    baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
+                }
+                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
+                baseResponse.Data = product;
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[GetProduct] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+            }
+            return baseResponse;
+        }
+
 
         public async Task<IBaseResponse<IEnumerable<Product>>> GetProducts()
         {

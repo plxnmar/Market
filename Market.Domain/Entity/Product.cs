@@ -1,6 +1,7 @@
 ﻿using Market.Domain.Enum;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,6 @@ namespace Market.Domain.Entity
         public string? ImgPath { get; set; }
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
-
     }
 
     public class Category

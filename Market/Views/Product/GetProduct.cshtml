@@ -5,22 +5,24 @@
 	Layout = "_Layout";
 }
 
-<div>
-	<div class="row g-0">
-		<div class="col-md-4">
-			<img src=@Model.ImgPath class="card-img-top embed-responsive-item" alt="..."
-				 style="height:18rem; width:100%; object-fit: cover;">
-		</div>
-		<div class="col-md-8">
-			<div class="card-body">
-				<h5 class="card-title">@Model?.Name</h5>
-				<p class="card-text">@Model?.Price</p>
-				<p class="card-text">@Model?.Description</p>
-				<p class="card-text"><small class="text-muted">Последнее обновление 3 мин. назад</small></p>
+<div class="container">
+	<div>
+		<div class="row g-0">
+			<div class="col-md-4">
+				<img src=@Model.ImgPath class="card-img-top embed-responsive-item" alt="..."
+					 style="height:18rem; width:100%; object-fit: cover;">
 			</div>
-		</div>
-		<div class="col-12">
-			<a asp-action="DeleteProduct" asp-route-id="@Model?.Id" class="btn btn-danger">Удалить</a>
+			<div class="col-md-8">
+				<div class="card-body">
+					<h5 class="card-title">@Model?.Name</h5>
+					<p class="card-text">@Model?.Price</p>
+					<p class="card-text">@Model?.Description</p>
+					<p class="card-text"><small class="text-muted">Последнее обновление 3 мин. назад</small></p>
+				</div>
+			</div>
+			<div class="col-12">
+				<a asp-action="DeleteProduct" asp-route-id="@Model?.Id" class="btn btn-danger">Удалить</a>
+			</div>
 		</div>
 	</div>
 </div>
