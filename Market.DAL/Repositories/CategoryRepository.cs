@@ -9,44 +9,44 @@ using System.Threading.Tasks;
 
 namespace Market.DAL.Repositories
 {
-    public class ProductRepository : IBaseRepository<Product>
+    public class CategoryRepository : IBaseRepository<Category>
     {
         private readonly ApplicationDbContext db;
 
-        public ProductRepository(ApplicationDbContext dbContext)
+        public CategoryRepository(ApplicationDbContext dbContext)
         {
             db = dbContext;
         }
 
-        public async Task<bool> Create(Product entity)
+        public async Task<bool> Create(Category entity)
         {
-            await db.Products.AddAsync(entity);
+            await db.Categories.AddAsync(entity);
             await db.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<Product> Get(int id)
+        public async Task<Category> Get(int id)
         {
-            return await db.Products.Include(p => p.Category).FirstOrDefaultAsync(x => x.Id == id);
+            return await db.Categories.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public IQueryable<Product> GetAll()
+        public IQueryable<Category> GetAll()
         {
-            return db.Products.Include(p => p.Category);
+            return db.Categories;
         }
 
-        public async Task<bool> Remove(Product entity)
+        public async Task<bool> Remove(Category entity)
         {
-            db.Products.Remove(entity);
+            db.Categories.Remove(entity);
             await db.SaveChangesAsync();
             return true;
 
         }
 
-        public async Task<Product> Update(Product entity)
+        public async Task<Category> Update(Category entity)
         {
-            db.Products.Update(entity);
+            db.Categories.Update(entity);
             await db.SaveChangesAsync();
 
             return entity;

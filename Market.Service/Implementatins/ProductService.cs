@@ -13,16 +13,16 @@ namespace Market.Service.Implementatins
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository productRepository;
+        private readonly IBaseRepository<Product> productRepository;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IBaseRepository<Product> productRepository)
         {
             this.productRepository = productRepository;
         }
 
-        public async Task<IBaseResponse<Product>> GetProduct(int id)
+        public async Task<IBaseResponse<ProductViewModel>> GetProduct(int id)
         {
-            var baseResponse = new BaseResponse<Product>();
+            var baseResponse = new BaseResponse<ProductViewModel>();
             try
             {
                 var product = await productRepository.Get(id);
@@ -33,11 +33,19 @@ namespace Market.Service.Implementatins
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
                 }
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
-                baseResponse.Data = product;
+                baseResponse.Data = new ProductViewModel()
+                {
+                    Name = product.Name,
+                    Description = product.Description,
+                    Price = product.Price,
+                    Category = product.Category,
+                    CategoryId = product.Category.Id,
+                    ImgPath = product.ImgPath,
+                };
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetProducr] : {ex.Message}";
+                baseResponse.Desciption = $"[GetProduct] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
@@ -72,6 +80,7 @@ namespace Market.Service.Implementatins
             try
             {
                 var product = await productRepository.Get(id);
+                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
                 baseResponse.Data = true;
 
                 if (product == null)
@@ -99,7 +108,8 @@ namespace Market.Service.Implementatins
                 var product = new Product()
                 {
                     Description = productViewModel.Description,
-                   // Category = productViewModel.TypeProduct,
+                    Category = productViewModel.Category,
+                    CategoryId = productViewModel.Category.Id,
                     Price = productViewModel.Price,
                     Name = productViewModel.Name
                 };
@@ -132,7 +142,8 @@ namespace Market.Service.Implementatins
                 product.Price = model.Price;
                 product.Id = model.Id;
                 product.Name = model.Name;
-              //  product.Category = model.TypeProduct;
+                product.Category = model.Category;
+                product.CategoryId = model.Category.Id;
 
                 await productRepository.Update(product);
                 return baseResponse;

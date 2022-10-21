@@ -4,16 +4,19 @@ using Market.Domain.ViewModels.Product;
 using Market.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Market.Controllers
 {
     public class ProductController : Controller
     {
         private readonly IProductService productService;
+        private readonly ICategoryService categoryService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, ICategoryService categoryService)
         {
             this.productService = productService;
+            this.categoryService = categoryService;
         }
 
         [HttpGet]
@@ -38,7 +41,7 @@ namespace Market.Controllers
             return RedirectToAction("Error");
         }
 
-      //  [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var response = await productService.DeleteProduct(id);
@@ -49,8 +52,8 @@ namespace Market.Controllers
             return RedirectToAction("Error");
         }
 
+        //  [Authorize(Roles = "Admin")]
         [HttpGet]
-      //  [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SaveProduct(int id)
         {
             //новый объект
@@ -58,6 +61,10 @@ namespace Market.Controllers
                 return View();
 
             var response = await productService.GetProduct(id);
+
+            var categories = (await categoryService.GetCategories()).Data.ToList();
+            ViewBag.Categories = categories;
+
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 return View(response.Data);
@@ -68,19 +75,23 @@ namespace Market.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveProduct(ProductViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                if (model.Id == 0)
-                {
-                    await productService.AddProduct(model);
-                }
-                else
-                {
-                    await productService.EditProduct(model.Id, model);
-                }
-            }
+            //if (ModelState.IsValid)
+            //{
 
-            return RedirectToAction("GetCars");
+            model.Category = (await categoryService.GetCategory(model.CategoryId)).Data;
+
+            if (model.Id == 0)
+            {
+               
+                await productService.AddProduct(model);
+            }
+            else
+            {
+                await productService.EditProduct(model.Id, model);
+            }
+            //}
+
+            return RedirectToAction("GetProducts");
         }
     }
 }

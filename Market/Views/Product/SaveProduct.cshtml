@@ -1,26 +1,38 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Market.Domain.ViewModels.Product.ProductViewModel
+
 @{
+	//для выпадающего списка категорий
+	var selectCategories = new SelectList(ViewBag.Categories, "Id", "Name");
 }
 
-<form class="row g-3">
+<form asp-controller="Product" asp-action="SaveProduct" method="post" class="row g-3">
+	@*<div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>*@
 	<div class="mb-3">
-		<label for="formGroupExampleInput" class="form-label">Название</label>
-		<input type="text" class="form-control" id="formGroupExampleInput" placeholder="Введите название">
+		<label class="form-label">Название</label>
+		<input asp-for="Name" class="form-control" placeholder="Введите название" />
+		<span asp-validation-for="Name" class="text-danger" />
 	</div>
 	<div class="mb-3">
-		<label for="formGroupExampleInput2" class="form-label">Описание</label>
-		<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Введите описание">
+		<label class="form-label">Стоимость</label>
+		<input asp-for="Price" class="form-control" placeholder="Введите цену" />
+		<span asp-validation-for="Price" class="text-danger" />
 	</div>
 	<div class="mb-3">
-		<label for="formGroupExampleInput2" class="form-label">Цена</label>
-		<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Введите стоимость">
+		<label class="form-label">Описание</label>
+		<input asp-for="Description" class="form-control" placeholder="Введите описание" />
+		<span asp-validation-for="Description" class="text-danger" />
 	</div>
 	<div class="mb-3">
-		<label for="formGroupExampleInput2" class="form-label">Категория</label>
-		<input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Выберите категорию">
+		<label class="form-label">Категория</label>
+		<select asp-for="CategoryId"  asp-items="selectCategories" class="form-select">
+			@*	<option>Please select one</option>*@
+			@*			<option selected>Выберите категорию</option>
+			<option value="1">One</option>
+			<option value="2">Two</option>
+			<option value="3">Three</option>*@
+		</select>
 	</div>
+
 	<div class="col-12">
 		<button type="submit" class="btn btn-primary">Сохранить</button>
 	</div>
