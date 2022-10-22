@@ -5,6 +5,7 @@ using Market.Domain.ViewModels.Product;
 using Market.Service.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,12 @@ namespace Market.Service.Implementatins
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
                 }
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
+
+                //var file = product.ImgPath;
+                //using var stream = new MemoryStream(File.ReadAllBytes(file).ToArray());
+                //var formFile = new FormFile(stream, 0, stream.Length, "streamFile", file.Split(@"\").Last());
+
+
                 baseResponse.Data = new ProductViewModel()
                 {
                     Name = product.Name,
@@ -40,6 +47,7 @@ namespace Market.Service.Implementatins
                     Price = product.Price,
                     Category = product.Category,
                     CategoryId = product.Category.Id,
+                  //  UploadedImage = formFile,
                     ImgPath = product.ImgPath,
                 };
             }
@@ -98,21 +106,25 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
-        public async Task<IBaseResponse<bool>> DeleteProduct(int id)
+        public async Task<IBaseResponse<Product>> DeleteProduct(int id)
         {
-            var baseResponse = new BaseResponse<bool>();
+            var baseResponse = new BaseResponse<Product>();
             try
             {
                 var product = await productRepository.Get(id);
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
-                baseResponse.Data = true;
+                baseResponse.Data = product;
 
                 if (product == null)
                 {
                     baseResponse.Desciption = "Продукт не найден";
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
-                    baseResponse.Data = false;
                 }
+
+               
+
+                //string imageFilePath = Server.MapPath(@"~/uploaded/imagefilename.extension");
+                //System.IO.File.Delete("imageFilePath");
 
                 await productRepository.Remove(product);
             }
@@ -134,6 +146,7 @@ namespace Market.Service.Implementatins
                     Description = productViewModel.Description,
                     Category = productViewModel.Category,
                     CategoryId = productViewModel.Category.Id,
+                    ImgPath = productViewModel.ImgPath,
                     Price = productViewModel.Price,
                     Name = productViewModel.Name
                 };
@@ -167,6 +180,7 @@ namespace Market.Service.Implementatins
                 product.Id = model.Id;
                 product.Name = model.Name;
                 product.Category = model.Category;
+                product.ImgPath = model.ImgPath;
                 product.CategoryId = model.Category.Id;
 
                 await productRepository.Update(product);
@@ -179,5 +193,31 @@ namespace Market.Service.Implementatins
             }
             return baseResponse;
         }
+
+
+        //public async Task<IBaseResponse<IFormFile>> GetFile(int id)
+        //{
+        //    var baseResponse = new BaseResponse<IFormFile>();
+        //    try
+        //    {
+        //        var product = await productRepository.Get(id);
+
+        //        if (product == null)
+        //        {
+        //            baseResponse.Desciption = "Продукт не найден";
+        //            baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
+        //        }
+        //        baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
+        //        baseResponse.Data = product;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        baseResponse.Desciption = $"[GetProduct] : {ex.Message}";
+        //        baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+        //    }
+        //    return baseResponse;
+        //}
+
+
     }
 }

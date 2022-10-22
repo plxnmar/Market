@@ -1,5 +1,6 @@
 ﻿using Market.Domain.Entity;
 using Market.Domain.Enum;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Market.Domain.ViewModels.Product
         public Category Category { get; set; }
         public int CategoryId { get; set; }
         public string? ImgPath { get; set; }
+        public IFormFile? UploadedImage { get; set; }
 
         //    public TypeProduct TypeProduct { get; set; }
     }
