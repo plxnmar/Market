@@ -1,4 +1,5 @@
-﻿using Market.DAL.Interfaces;
+﻿using Azure;
+using Market.DAL.Interfaces;
 using Market.Domain.Entity;
 using Market.Domain.Response;
 using Market.Domain.ViewModels.Product;
@@ -55,7 +56,7 @@ namespace Market.Controllers
         {
             var response = await productService.GetProductViewModel(id);
 
-          
+
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 return View(response.Data);
@@ -69,7 +70,7 @@ namespace Market.Controllers
             var response = await productService.DeleteProduct(id);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                DelteImage(response);
+                DeleteImage(response.Data.ImgPath);
 
                 return RedirectToAction("GetProducts");
             }
@@ -93,15 +94,7 @@ namespace Market.Controllers
                 return View(model);
             }
 
-
             var response = await productService.GetProductViewModel(id);
-
-            //var file = "./wwwroot" + response.Data.ImgPath;
-            //using var stream = System.IO.File.OpenRead(file);
-            ////  var formFile = new FormFile(stream, 0, stream.Length, "streamFile", file.Split(@"\").Last());
-            //var File = new FormFile(stream, 0, stream.Length, null, Path.GetFileName(stream.Name));
-
-            //response.Data.UploadedImage = File;
 
 
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
@@ -117,14 +110,21 @@ namespace Market.Controllers
             //if (ModelState.IsValid)
             //{
 
+
+
             if (model.UploadedImage != null)
+            {
+                var product = await productService.GetProduct(model.Id);
+
+                await DeleteImage(product.Data.ImgPath);
                 await SaveImage(model);
+            }
+
 
             model.Category = (await categoryService.GetCategory(model.CategoryId)).Data;
 
             if (model.Id == 0)
             {
-
                 await productService.AddProduct(model);
             }
             else
@@ -138,6 +138,9 @@ namespace Market.Controllers
 
         private async Task SaveImage(ProductViewModel model)
         {
+            //удаление старого изображения 
+            DeleteImage(model.ImgPath);
+
             // путь к папке img в root
             string path = "/img/" + model.UploadedImage.FileName;
 
@@ -150,9 +153,9 @@ namespace Market.Controllers
             model.ImgPath = path;
         }
 
-        private void DelteImage(IBaseResponse<Product> response)
+        private async Task DeleteImage(string path)
         {
-            var fullPath = _appEnvironment.WebRootPath + response.Data.ImgPath;
+            var fullPath = _appEnvironment.WebRootPath + path;
 
             try
             {

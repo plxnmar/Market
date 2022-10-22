@@ -3,13 +3,13 @@
 @{
 	//для выпадающего списка категорий
 	var selectCategories = new SelectList(ViewBag.Categories, "Id", "Name");
+
 }
 
 <div class="container">
-
 	<div class="row justify-content-md-center">
 		<div class="col-6">
-			<div>
+			<div style="text-align:center">
 				<h1>Изменить продукт</h1>
 			</div>
 			<form asp-controller="Product" asp-action="SaveProduct" method="post" class="row g-3" 
@@ -37,7 +37,7 @@
 				<div class="mb-2">
 					<label for="formFile" class="form-label">Добавьте изображение</label>
 					@*<div>
-						<img src="@Model.ImgPath" alt="Product img" asp-append-version="true"
+						@*<img src="@Model.ImgPath" alt="Product img" asp-append-version="true"
 							 style="height:10rem; width:40%; object-fit: cover;" />
 					</div>*@
 					<input asp-for="UploadedImage"  value="@Model.UploadedImage"  class="form-control" type="file" >
