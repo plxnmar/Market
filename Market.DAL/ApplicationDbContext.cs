@@ -14,31 +14,40 @@ namespace Market.DAL
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            //Database.EnsureDeleted();
+            Database.EnsureDeleted();
 
             Database.EnsureCreated();
 
-            //Category fruitCategory = new Category() { Name = "Фрукты" };
-            //Category vegCategory = new Category() { Name = "Овощи" };
+            Category fruitCategory = new Category() { Name = "Фрукты" };
+            Category vegCategory = new Category() { Name = "Овощи" };
 
-            //Product apple = new Product()
-            //{ Name = "Яблоко", Description = "Вкусное яблоко", Price = 50, Category = fruitCategory, ImgPath = "/img/apple-red.jpg" };
+            Product apple = new Product()
+            { Name = "Яблоко", Description = "Вкусное яблоко", Price = 50, Category = fruitCategory, ImgPath = "/img/apple-red.jpg" };
 
-            //Product bananna = new Product()
-            //{ Name = "Банан", Description = "Спелый банан", Price = 70, Category = fruitCategory, ImgPath = "/img/bannana.jpg" };
+            Product bananna = new Product()
+            { Name = "Банан", Description = "Спелый банан", Price = 70, Category = fruitCategory, ImgPath = "/img/bannana.jpg" };
 
-            //Product potato = new Product()
-            //{ Name = "Картофель", Description = "Молодой картофель", Price = 30, Category = vegCategory, ImgPath = "/img/potato.jpg" };
+            Product potato = new Product()
+            { Name = "Картофель", Description = "Молодой картофель", Price = 30, Category = vegCategory, ImgPath = "/img/potato.jpg" };
 
-            //this.Products.AddRange(apple, bananna, potato);
-            //this.SaveChanges();
+            Role adminRole = new Role() { Name = "admin" };
+            Role userRole = new Role() { Name = "user" };
+
+            User admin = new User() { Name = "admin", Role = adminRole, Password = "12345" };
+            User user = new User() { Name = "user123", Role = userRole, Password = "111" };
+
+            this.Users.AddRange(admin, user);
+            this.SaveChanges();
+
+            this.Products.AddRange(apple, bananna, potato);
+            this.SaveChanges();
 
         }
 
         public DbSet<Product> Products { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
-
+        public DbSet<Role> Roles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -4,6 +4,7 @@ using Market.DAL.Repositories;
 using Market.Domain.Entity;
 using Market.Service.Implementatins;
 using Market.Service.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -22,15 +23,30 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
 //services.AddControllersWithViews();
 
+// установка конфигурации подключения
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => //CookieAuthenticationOptions
+    {
+        //options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+    });
+
+
+builder.Services.AddScoped<IBaseRepository<User>, UserRepository>();
+builder.Services.AddScoped<IBaseRepository<Role>, RoleRepository>();
 //регистрация интерфейса IProductRepository с классом репозитория
 builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
-
 builder.Services.AddScoped<IBaseRepository<Category>, CategoryRepository>();
+
+
+
+//сервис аккаута
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 //подключение сервиса продукта
 builder.Services.AddScoped<IProductService, ProductService>();
 //подключение сервиса категории продукта
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 
 var app = builder.Build();
 
@@ -47,6 +63,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

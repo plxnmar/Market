@@ -33,7 +33,7 @@
 						<li class="nav-item">
 							@*	<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Authorization"
 							>Аккаунт</a>*@
-							<button asp-area="" asp-controller="Account" asp-action="Authorization"
+							<button asp-area="" asp-controller="Account" asp-action="Login"
 									type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 								Запустите демо модального окна
 							</button>
@@ -63,31 +63,32 @@
 
 
 
-	
 
 
-	<!-- Modal -->
+
+	@*<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Войдите, пожалуйста</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					@*<partial name="~/Views/Account/Authorization.cshtml" />*@
-					@{
-						await Html.RenderPartialAsync("~/Views/Account/Authorization.cshtml");
-					}
-					@*<form method="post" asp-controller="Account" asp-action="Authorization"></form>*@
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
-				</div>
-			</div>
-		</div>
+	<div class="modal-dialog">
+	<div class="modal-content">
+	<div class="modal-header">
+	<h5 class="modal-title" id="exampleModalLabel">Войдите, пожалуйста</h5>
+	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	</div>
+	<div class="modal-body">
+	@*<partial name="~/Views/Account/Authorization.cshtml" />*@
+	@{
+		var loginViewModel = new Market.Domain.ViewModels.Account.LoginViewModel();
+		await Html.RenderPartialAsync("~/Views/Account/Login.cshtml", loginViewModel);
+	}
+	@*<form method="post" asp-controller="Account" asp-action="Authorization"></form>*@
+	@*	</div>
+	<div class="modal-footer">
+	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	<button type="button" class="btn btn-primary">Save changes</button>
+	</div>
+	</div>
+	</div>
+	</div>*@
 
 
 

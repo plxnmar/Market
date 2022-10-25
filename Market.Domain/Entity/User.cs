@@ -11,6 +11,7 @@ namespace Market.Domain.Entity
         public int Id { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
+        public int? RoleId { get; set; }
         public virtual Role Role { get; set; }
     }
 
@@ -18,5 +19,10 @@ namespace Market.Domain.Entity
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public List<User> Users { get; set; }
+        public Role()
+        {
+            Users = new List<User>();
+        }
     }
 }
