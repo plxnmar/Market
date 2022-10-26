@@ -21,6 +21,12 @@ namespace Market.Controllers
             return PartialView();
         }
 
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return PartialView();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
@@ -34,5 +40,20 @@ namespace Market.Controllers
             }
             return RedirectToAction("Error");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            var response = await accountService.Register(registerViewModel);
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(response.Data));
+
+                return RedirectToAction("Index", "Home");
+            }
+            return RedirectToAction("Error");
+        }
+
     }
 }

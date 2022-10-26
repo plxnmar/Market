@@ -31,18 +31,12 @@
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li class="nav-item">
-							@*	<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Authorization"
-							>Аккаунт</a>*@
-							<button asp-area="" asp-controller="Account" asp-action="Login"
-									type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-								Запустите демо модального окна
-							</button>
-
-							@*data-bs-toggle="modal" data-bs-target="#exampleModal"*@
-							@*<button asp-area="" asp-controller="Account" asp-action="Authorization" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-							Запустите демо модального окна
-							</button>*@
-
+							<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login"
+									 data-bs-toggle="modal" data-bs-target="#loginModal">Войти</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register"
+							   data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрироваться</a>
 						</li>
 					</ul>
 				</div>
@@ -79,6 +73,9 @@
 	@{
 		var loginViewModel = new Market.Domain.ViewModels.Account.LoginViewModel();
 		await Html.RenderPartialAsync("~/Views/Account/Login.cshtml", loginViewModel);
+
+		var registerViewModel = new Market.Domain.ViewModels.Account.RegisterViewModel();
+		await Html.RenderPartialAsync("~/Views/Account/Register.cshtml", registerViewModel);
 	}
 	@*<form method="post" asp-controller="Account" asp-action="Authorization"></form>*@
 	@*	</div>
