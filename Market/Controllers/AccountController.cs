@@ -3,6 +3,7 @@ using Market.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Security.Claims;
 
 namespace Market.Controllers
@@ -18,13 +19,13 @@ namespace Market.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            return PartialView();
+            return View();
         }
 
         [HttpGet]
         public IActionResult Register()
         {
-            return PartialView();
+            return View();
         }
 
         [HttpPost]
@@ -33,27 +34,32 @@ namespace Market.Controllers
             var response = await accountService.Login(loginViewModel);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, 
-                    new ClaimsPrincipal(response.Data));
-
-                return RedirectToAction("Index", "Home");
-            }
-            return RedirectToAction("Error");
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
-        {
-            var response = await accountService.Register(registerViewModel);
-            if (response.StatusCode == Domain.Enum.StatusCode.OK)
-            {
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(response.Data));
 
                 return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction("Error");
+
+            return View();
+            //return RedirectToAction("Error");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var response = await accountService.Register(registerViewModel);
+                if (response.StatusCode == Domain.Enum.StatusCode.OK)
+                {
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(response.Data));
+
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+             return View();
+        }
     }
 }

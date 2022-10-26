@@ -42,7 +42,7 @@ namespace Market.Service.Implementatins
                         StatusCode = StatusCode.UserNotFound
                     };
 
-                if (user.Password != /*HashPasswordHelper.GetHashPassword*/(loginViewModel.Password))
+                if (user.Password != HashPasswordHelper.GetHashPassword(loginViewModel.Password))
                 {
                     return new BaseResponse<ClaimsIdentity>()
                     {
@@ -83,7 +83,7 @@ namespace Market.Service.Implementatins
                 user = new User()
                 {
                     Name = registerViewModel.Name,
-                    Password = registerViewModel.Password,
+                    Password =  HashPasswordHelper.GetHashPassword(registerViewModel.Password),
                 };
 
                 var userRole = await roleRepository.GetAll().FirstOrDefaultAsync(x => x.Name == "user");

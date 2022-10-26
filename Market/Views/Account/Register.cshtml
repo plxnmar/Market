@@ -1,38 +1,40 @@
 ﻿@model Market.Domain.ViewModels.Account.RegisterViewModel
 
-<!-- Modal -->
-<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<form method="post" asp-controller="Account" asp-action="Register">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Регистрация</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<div class="mb-3">
-						<label for="exampleInputEmail1" class="form-label">Имя</label>
-						<input asp-for="Name" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-						@*<div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>*@
-					</div>
-					<div class="mb-3">
-						<label for="exampleInputPassword1" class="form-label">Пароль</label>
-						<input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1">
-					</div>
-					<div class="mb-3">
-						<label for="exampleInputPassword2" class="form-label">Повторите пароль</label>
-						<input asp-for="PasswordConfirm" type="password" class="form-control" id="exampleInputPassword2">
-					</div>
-				</div>
-				@*	<div class="mb-3 form-check">
-				<input type="checkbox" class="form-check-input" id="exampleCheck1">
-				<label class="form-check-label" for="exampleCheck1">Запомнить</label>
-				</div>*@
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-					<button asp-action="Register" asp-controller="Account" type="submit" class="btn btn-primary">Отправить</button>
-				</div>
-			</form>
-		</div>
+@*<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register"
+   data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрироваться</a>
+*@
+
+<div class="row justify-content-center">
+	<div class="col-4">
+		<form method="post" asp-controller="Account" asp-action="Register">
+			<div>
+				<h4 class="text-center">Регистрация</h4>
+			</div>
+
+			<div class="validation" asp-validation-summary="All"></div>
+			<div class="mb-3">
+				<label for="exampleInputEmail1" class="form-label">Имя</label>
+				<input asp-for="Name" type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+				<span asp-validation-for="Name" class="text-danger" />
+				@*<div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>*@
+			</div>
+			<div class="mb-3">
+				<label for="exampleInputPassword1" class="form-label">Пароль</label>
+				<input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1">
+				<span asp-validation-for="Password" class="text-danger" />
+			</div>
+			<div class="mb-3">
+				<label for="exampleInputPassword2" class="form-label">Повторите пароль</label>
+				<input asp-for="PasswordConfirm" type="password" class="form-control" id="exampleInputPassword2">
+				<span asp-validation-for="PasswordConfirm" class="text-danger" />
+			</div>
+			@*	<div class="mb-3 form-check">
+			<input type="checkbox" class="form-check-input" id="exampleCheck1">
+			<label class="form-check-label" for="exampleCheck1">Запомнить</label>
+			</div>*@
+			<div class="text-center">
+				<button asp-action="Register" asp-controller="Account" type="submit" class="btn btn-primary">Отправить</button>
+			</div>
+		</form>
 	</div>
 </div>

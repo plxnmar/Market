@@ -29,16 +29,21 @@
 							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 						</li>
 					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login"
-									 data-bs-toggle="modal" data-bs-target="#loginModal">Войти</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register"
-							   data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрироваться</a>
-						</li>
-					</ul>
+					@{
+						if (!User.Identity.IsAuthenticated)
+						{
+							<ul class="nav navbar-nav navbar-right">
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area="" 
+									asp-controller="Account" asp-action="Login" >Войти</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area=""
+									asp-controller="Account" asp-action="Register">Зарегистрироваться</a>
+								</li>
+							</ul>
+						}
+					}
 				</div>
 			</div>
 		</nav>
@@ -55,39 +60,13 @@
 		</div>
 	</footer>
 
+	@*		@{
+	var loginViewModel = new Market.Domain.ViewModels.Account.LoginViewModel();
+	await Html.RenderPartialAsync("~/Views/Account/Login.cshtml", loginViewModel);
 
-
-
-
-
-	@*<!-- Modal -->
-	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-	<div class="modal-content">
-	<div class="modal-header">
-	<h5 class="modal-title" id="exampleModalLabel">Войдите, пожалуйста</h5>
-	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	</div>
-	<div class="modal-body">
-	@*<partial name="~/Views/Account/Authorization.cshtml" />*@
-	@{
-		var loginViewModel = new Market.Domain.ViewModels.Account.LoginViewModel();
-		await Html.RenderPartialAsync("~/Views/Account/Login.cshtml", loginViewModel);
-
-		var registerViewModel = new Market.Domain.ViewModels.Account.RegisterViewModel();
-		await Html.RenderPartialAsync("~/Views/Account/Register.cshtml", registerViewModel);
-	}
-	@*<form method="post" asp-controller="Account" asp-action="Authorization"></form>*@
-	@*	</div>
-	<div class="modal-footer">
-	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-	<button type="button" class="btn btn-primary">Save changes</button>
-	</div>
-	</div>
-	</div>
-	</div>*@
-
-
+	var registerViewModel = new Market.Domain.ViewModels.Account.RegisterViewModel();
+	await Html.RenderPartialAsync("~/Views/Account/Register.cshtml", registerViewModel);
+	}*@
 
 
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>

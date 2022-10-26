@@ -11,13 +11,15 @@ namespace Market.Domain.Helpers
     {
         public static string GetHashPassword(string password)
         {
-            UnicodeEncoding ue = new UnicodeEncoding();
-            byte[] messageBytes = ue.GetBytes(password);
-            SHA256 shHash = SHA256.Create();
+            using (var sha256 = SHA256.Create())
+            {
+                var salt = "fer45bo23yh89f7w34bu3fq8ar";
 
-            var hashValue = shHash.ComputeHash(messageBytes);
+                byte[] messageBytes = Encoding.UTF8.GetBytes(salt + password);
+                var hashValue = sha256.ComputeHash(messageBytes);
 
-            return hashValue.ToString();
+                return Convert.ToHexString(hashValue);
+            }
         }
     }
 }
