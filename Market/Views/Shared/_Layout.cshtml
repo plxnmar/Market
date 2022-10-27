@@ -29,21 +29,28 @@
 							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 						</li>
 					</ul>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area=""
+							   asp-controller="Cart" asp-action="GetCart">Корзина</a>
+						</li>
+					</ul>
 					@{
 						if (!User.Identity.IsAuthenticated)
 						{
 							<ul class="nav navbar-nav navbar-right">
 								<li class="nav-item">
-									<a class="nav-link text-dark" asp-area="" 
-									asp-controller="Account" asp-action="Login" >Войти</a>
+									<a class="nav-link text-dark" asp-area=""
+							   asp-controller="Account" asp-action="Login">Войти</a>
 								</li>
 								<li class="nav-item">
 									<a class="nav-link text-dark" asp-area=""
-									asp-controller="Account" asp-action="Register">Зарегистрироваться</a>
+							   asp-controller="Account" asp-action="Register">Зарегистрироваться</a>
 								</li>
 							</ul>
 						}
-						else 
+						else
 						{
 							<ul class="nav navbar-nav navbar-right">
 								<li class="nav-item">

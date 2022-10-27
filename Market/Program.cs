@@ -33,19 +33,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddScoped<IBaseRepository<User>, UserRepository>();
 builder.Services.AddScoped<IBaseRepository<Role>, RoleRepository>();
-//регистрация интерфейса IProductRepository с классом репозитория
 builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IBaseRepository<Category>, CategoryRepository>();
+builder.Services.AddScoped<IBaseRepository<Cart>, CartRepository>();
+builder.Services.AddScoped<IBaseRepository<CartItem>, CartItemRepository>();
 
-
-
-//сервис аккаута
 builder.Services.AddScoped<IAccountService, AccountService>();
-
-//подключение сервиса продукта
 builder.Services.AddScoped<IProductService, ProductService>();
-//подключение сервиса категории продукта
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 
 var app = builder.Build();

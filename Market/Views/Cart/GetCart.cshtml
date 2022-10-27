@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Market.Domain.Entity.CartItem>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+
+	@{
+		foreach (var cart in Model)
+		{
+			var product = cart.Product;
+
+			<div class="card-group">
+				<div class="card">
+					<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
+				 	style="height:18rem; width:100%; object-fit: cover;">
+					<div class="card-body">
+						<h5 class="card-title">@product.Name</h5>
+						<p class="card-text">@product.Price</p>
+						<p class="card-text">@product.Category.Name</p>
+						<p class="card-text">@product.Description</p>
+						<a href="#" class="btn btn-success">В корзину</a>
+
+
+						<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-secondary">Подробнее</a>
+						<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-primary">Изменить</a>
+					</div>
+				</div>
+			</div>
+		}
+	}
+</div>

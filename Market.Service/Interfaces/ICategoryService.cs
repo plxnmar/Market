@@ -14,7 +14,5 @@ namespace Market.Service.Interfaces
     {
         Task<IBaseResponse<IEnumerable<Category>>> GetCategories();
         Task<IBaseResponse<Category>> GetCategory(int id);
-
-
     }
 }
