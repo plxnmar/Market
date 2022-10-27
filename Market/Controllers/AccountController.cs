@@ -28,6 +28,14 @@ namespace Market.Controllers
             return View();
         }
 
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
@@ -41,7 +49,6 @@ namespace Market.Controllers
             }
 
             return View();
-            //return RedirectToAction("Error");
         }
 
         [HttpPost]
@@ -59,7 +66,7 @@ namespace Market.Controllers
                 }
             }
 
-             return View();
+            return View();
         }
     }
 }
