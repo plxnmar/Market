@@ -14,41 +14,46 @@ namespace Market.DAL
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            Database.EnsureDeleted();
+            //Database.EnsureDeleted();
 
             Database.EnsureCreated();
 
-            Category fruitCategory = new Category() { Name = "Фрукты" };
-            Category vegCategory = new Category() { Name = "Овощи" };
+            //Category fruitCategory = new Category() { Name = "Фрукты" };
+            //Category vegCategory = new Category() { Name = "Овощи" };
 
-            Product apple = new Product()
-            { Name = "Яблоко", Description = "Вкусное яблоко", Price = 50, Category = fruitCategory, ImgPath = "/img/apple-red.jpg" };
+            //Product apple = new Product()
+            //{ Name = "Яблоко", Description = "Вкусное яблоко", Price = 50, Category = fruitCategory, ImgPath = "/img/apple-red.jpg" };
 
-            Product bananna = new Product()
-            { Name = "Банан", Description = "Спелый банан", Price = 70, Category = fruitCategory, ImgPath = "/img/bannana.jpg" };
+            //Product bananna = new Product()
+            //{ Name = "Банан", Description = "Спелый банан", Price = 70, Category = fruitCategory, ImgPath = "/img/bannana.jpg" };
 
-            Product potato = new Product()
-            { Name = "Картофель", Description = "Молодой картофель", Price = 30, Category = vegCategory, ImgPath = "/img/potato.jpg" };
+            //Product potato = new Product()
+            //{ Name = "Картофель", Description = "Молодой картофель", Price = 30, Category = vegCategory, ImgPath = "/img/potato.jpg" };
 
-            Role adminRole = new Role() { Name = "admin" };
-            Role userRole = new Role() { Name = "user" };
+            //Role adminRole = new Role() { Name = "admin" };
+            //Role userRole = new Role() { Name = "user" };
 
-            User admin = new User() { Name = "admin", Role = adminRole, Password = "12345" };
-            User user = new User() { Name = "user123", Role = userRole, Password = "111" };
+            //User admin = new User() { Name = "admin", Role = adminRole, Password = "12345" };
+            //User user = new User() { Name = "user123", Role = userRole, Password = "111" };
 
-            Cart cart = new Cart() { User = admin };
+            //Cart cart = new Cart() { User = admin };
 
-            List<CartItem> cartItems = new List<CartItem>() { new CartItem() { Cart = cart, Product = apple, Count = 1 } };
-            
+            //CartItem cartItem = new CartItem() { Cart = cart, Product = potato, Count = 1 };
 
 
-            this.Users.AddRange(admin, user);
-            this.SaveChanges();
 
-            this.Products.AddRange(apple, bananna, potato);
-            this.SaveChanges();
+            // this.Users.AddRange(admin, user);
+            // this.SaveChanges();
 
-            this.CartItems.AddRange(cartItems);
+            // this.Products.AddRange(apple, bananna, potato);
+            //this.SaveChanges();
+
+
+            // this.CartItems.AddRange(cartItem);
+            //this.SaveChanges();
+
+
+
         }
 
         public DbSet<Product> Products { get; set; }

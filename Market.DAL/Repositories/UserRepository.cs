@@ -28,12 +28,20 @@ namespace Market.DAL.Repositories
 
         public async Task<User> Get(int id)
         {
-            return await db.Users.Include(x => x.Role).FirstOrDefaultAsync(x => x.Id == id);
+            return await db.Users.
+                Include(x => x.Role).
+                Include(r => r.Cart).
+                ThenInclude(x => x.CartItems).
+                FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public IQueryable<User> GetAll()
         {
-            return db.Users.Include(x => x.Role);
+            return db.Users.
+                Include(x => x.Role).
+                Include(r => r.Cart).
+                ThenInclude(x=> x.CartItems).
+                ThenInclude(x => x.Product);
         }
 
         public async Task<bool> Remove(User entity)

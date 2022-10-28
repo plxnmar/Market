@@ -13,7 +13,8 @@ namespace Market.Service.Interfaces
     {
         //Task<IBaseResponse<IEnumerable<Product>>> GetProducts();
         //Task<IBaseResponse<ProductViewModel>> GetProductViewModel(int id);
-        Task<IBaseResponse<IEnumerable<CartItem>>> GetCartItems(string name);
+        Task<IBaseResponse<IEnumerable<CartItem>>> GetCartItems(string userName);
+        Task<IBaseResponse<IEnumerable<CartItem>>> AddCartItem(string userName, int itemId);
         //Task<IBaseResponse<Product>> DeleteProduct(int id);
         //Task<IBaseResponse<bool>> AddProduct(ProductViewModel productViewModel);
         //Task<IBaseResponse<Product>> EditProduct(int id, ProductViewModel model);

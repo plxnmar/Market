@@ -23,17 +23,20 @@ namespace Market.DAL.Repositories
             await db.CartItems.AddAsync(entity);
             await db.SaveChangesAsync();
 
+            
             return true;
         }
 
         public async Task<CartItem> Get(int id)
         {
-            return await db.CartItems.FirstOrDefaultAsync(x => x.Id == id);
+            return await db.CartItems
+                .Include(x => x.Product)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public IQueryable<CartItem> GetAll()
         {
-            return db.CartItems;
+            return db.CartItems.Include(x => x.Product);
         }
 
         public async Task<bool> Remove(CartItem entity)

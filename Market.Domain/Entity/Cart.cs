@@ -10,10 +10,9 @@ namespace Market.Domain.Entity
     public class Cart
     {
         public int Id { get; set; }
-        public List<CartItem> CartItems { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
-
+        public List<CartItem> CartItems { get; set; }
         public Cart()
         {
             CartItems = new List<CartItem>();
@@ -23,8 +22,7 @@ namespace Market.Domain.Entity
     public class CartItem
     {
         public int Id { get; set; }
-
-        public string CartId { get; set; }
+        public int CartId { get; set; }
         public Cart Cart { get; set; }
 
         public int Count { get; set; }

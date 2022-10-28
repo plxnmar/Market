@@ -1,29 +1,49 @@
 ﻿@model IEnumerable<Market.Domain.Entity.CartItem>
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="mb-3">
+	<h3>Корзина</h3>
+</div>
 
-	@{
+
+@{
+	if (Model.Count() > 0)
+	{
 		foreach (var cart in Model)
 		{
 			var product = cart.Product;
-
-			<div class="card-group">
-				<div class="card">
-					<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
+			<div class="card mb-3">
+				<div class="row g-0">
+					<div class="col-md-3">
+						<img src=@product.ImgPath class="img-fluid rounded-start" alt="..."
 				 	style="height:18rem; width:100%; object-fit: cover;">
-					<div class="card-body">
-						<h5 class="card-title">@product.Name</h5>
-						<p class="card-text">@product.Price</p>
-						<p class="card-text">@product.Category.Name</p>
-						<p class="card-text">@product.Description</p>
-						<a href="#" class="btn btn-success">В корзину</a>
+					</div>
+					<div class="col-md-8">
+						<div class="card-body">
+							<h5 class="card-title">@product.Name</h5>
+							<p class="card-text">@product.Price ₽</p>
 
+							<p class="card-text">@product.Description</p>
 
-						<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-secondary">Подробнее</a>
-						<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-primary">Изменить</a>
+							<a asp-action="DeleteCartItem" asp-route-id="@product.Id" class="btn btn-outline-primary">Удалить</a>
+						</div>
 					</div>
 				</div>
 			</div>
 		}
+
+
+
+
+
 	}
-</div>
+
+	else
+	{
+		<div class="mb-3">
+			<h5>Корзина пуста</h5>
+		</div>
+	}
+}
+
+
+

@@ -1,4 +1,5 @@
-﻿using Market.Service.Interfaces;
+﻿using Azure;
+using Market.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Market.Controllers
@@ -22,6 +23,15 @@ namespace Market.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> AddCartItem(int productId)
+        {
+            var response = await cartService.AddCartItem(User.Identity.Name, productId);
 
+            return RedirectToAction("Index", "Home");
+          //  return View();
+          
+        }
+      
     }
 }
