@@ -20,7 +20,7 @@ namespace Market.Controllers
             var response = await cartService.GetCartItems(User.Identity.Name);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                return View(response.Data);
+                return View(response.Data.ToList());
             }
             return View();
         }
@@ -31,10 +31,12 @@ namespace Market.Controllers
             var response = await cartService.AddCartItem(User.Identity.Name, productId);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                return RedirectToAction("GetProducts", "Product");
+                //  return RedirectToAction("GetProducts", "Product");
+                return NoContent();
             }
+            return NoContent();
 
-            return RedirectToAction("Index", "Home");
+            //  return RedirectToAction("Index", "Home");
             //  return View();
 
         }
@@ -48,9 +50,13 @@ namespace Market.Controllers
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 //return View("/");
-                return RedirectToAction("GetCart");
+                // return RedirectToAction("GetCart");
+                  return NoContent();
+              //  return Content("done");
             }
-             return RedirectToAction("Index", "Home");
+             return NoContent();
+           // return Content("something went wrong...");
+            //  return RedirectToAction("Index", "Home");
         }
 
     }

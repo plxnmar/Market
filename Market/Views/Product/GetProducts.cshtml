@@ -5,33 +5,37 @@
 		<a asp-action="SaveProduct" asp-route-id="0" class="btn btn-danger">Добавить продукт</a>
 	</div>
 
-	<div class="row row-cols-1 row-cols-md-3 g-4">
-
+	<div class="card-group">
 		@{
 			foreach (var product in Model)
 			{
-				<div class="card-group">
-					<div class="card">
-						<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
-					 	style="height:18rem; width:100%; object-fit: cover;">
-						<div class="card-body">
-							<h5 class="card-title">@product.Name</h5>
-							<p class="card-text">@product.Price</p>
-							<p class="card-text">@product.Category.Name</p>
-							<p class="card-text">@product.Description</p>
-							<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@product.Id">
-								<input type="submit" class="btn btn-success" value="В корзину">
-							</form>
 
-							<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-secondary">Подробнее</a>
-							<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-primary">Изменить</a>
-						</div>
+				<div class="card">
+					<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
+				 	style="height:18rem; width:100%; object-fit: cover;">
+					<div class="card-body">
+						<h5 class="card-title">@product.Name</h5>
+						<p class="card-text">@product.Price</p>
+						<p class="card-text">@product.Category.Name</p>
+						<p class="card-text">@product.Description</p>
+
+						<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@product.Id"
+					  method="post" data-ajax="true">
+							<input type="submit" class="btn btn-success" value="В корзину">
+						</form>
+
+						<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-secondary">Подробнее</a>
+						<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-primary">Изменить</a>
 					</div>
 				</div>
 			}
 		}
 	</div>
-
 </div>
 
 
+@section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
+
+}

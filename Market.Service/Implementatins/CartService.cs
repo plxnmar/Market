@@ -68,8 +68,8 @@ namespace Market.Service.Implementatins
 
 
 
-                await cartItemRepository.Create(cart);
-
+              var result =  await cartItemRepository.Create(cart);
+             
                 //await cartRepository.Update(user.Cart);
 
 

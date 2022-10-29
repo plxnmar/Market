@@ -1,4 +1,10 @@
-﻿@model IEnumerable<Market.Domain.Entity.CartItem>
+﻿@model List<Market.Domain.Entity.CartItem>
+
+
+@{
+	ViewBag.Title = "title";
+	Layout = "_Layout";
+}
 
 <div class="mb-3">
 	<h3>Корзина</h3>
@@ -8,29 +14,33 @@
 @{
 	if (Model.Count() > 0)
 	{
-		foreach (var cart in Model)
-		{
-			var product = cart.Product;
-			<div class="card mb-3">
-				<div class="row g-0">
-					<div class="col-md-3">
-						<img src=@product.ImgPath class="img-fluid rounded-start" alt="..."
-				 	style="height:18rem; width:100%; object-fit: cover;">
-					</div>
-					<div class="col-md-8">
-						<div class="card-body">
-							<h5 class="card-title">@product.Name</h5>
-							<p class="card-text">@product.Price ₽</p>
+		<ul class="list-group list-group-lg list-group-flush list my--4">
+			@foreach (var cart in Model)
+			{
+				var product = cart.Product;
+				<li class="list-group-item px-0">
+					<div class="row g-0">
+						<div class="col-md-3">
+							<img src=@product.ImgPath class="img-fluid rounded-start" alt="..."
+					 	style="height:18rem; width:100%; object-fit: cover;">
+						</div>
+						<div class="col-md-8">
+							<div class="card-body">
+								<h5 class="card-title">@product.Name</h5>
+								<p class="card-text">@product.Price ₽</p>
 
-							<p class="card-text">@product.Description</p>
-							<form asp-controller="Cart" asp-action="DeleteCartItem" method="post" asp-route-cartId="@cart.Id">
-								<input type="submit" class="btn btn-outline-primary" value="Удалить"/>
-							</form>
+								<p class="card-text">@product.Description</p>
+
+								<form asp-controller="Cart" asp-action="DeleteCartItem" method="post" asp-route-cartId="@cart.Id"
+								data-ajax="true" data-ajax-success="deleteItem(this)">
+									<input type="submit" class="btn btn-outline-primary" value="Удалить" />
+								</form>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-		}
+				</li>
+			}
+		</ul>
 	}
 
 	else
@@ -40,6 +50,40 @@
 		</div>
 	}
 }
+@section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
+
+	<script>
+		function deleteItem(form) {
+			$(form).parents('li').remove();
+		}
+	</script>
+}
+
+	@*
+<script>
+	// Удаление пользователя
+	async function DeleteUser(id) {
+		const response = await fetch("api/Cart/GetCart/" + id, {
+			method: "post",
+			headers: { "Accept": "application/json" }
+		});
+		if (response.ok === true) {
+			const user = await response.json();
+			document.querySelector("tr[data-rowid='" + user.id + "']").remove();
+		}
+	}
+</script>*@
 
 
-
+	@*
+$('.deleteHistory').click(function(){
+  var url = '/UserHistory';
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: data,
+    success: onSuccessCallback
+  });
+});*@
