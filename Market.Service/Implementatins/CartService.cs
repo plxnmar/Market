@@ -67,7 +67,7 @@ namespace Market.Service.Implementatins
                 };
 
 
-                
+
                 await cartItemRepository.Create(cart);
 
                 //await cartRepository.Update(user.Cart);
@@ -114,6 +114,48 @@ namespace Market.Service.Implementatins
                 baseResponse.StatusCode = StatusCode.InternalServerError;
             }
 
+            return baseResponse;
+        }
+
+        public async Task<IBaseResponse<IEnumerable<CartItem>>> DeleteCartItem(string userName, int cartItemId)
+        {
+            var baseResponse = new BaseResponse<IEnumerable<CartItem>>();
+            try
+            {
+                var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
+
+                if (user == null)
+                {
+                    return new BaseResponse<IEnumerable<CartItem>>()
+                    {
+                        Desciption = "[DeleteCartItem] : Пользователь не найден",
+                        StatusCode = StatusCode.UserNotFound,
+                    };
+                }
+
+                var cartItem = await cartItemRepository.GetAll().FirstOrDefaultAsync(x => x.Id == cartItemId);
+
+                if (cartItem == null)
+                {
+                    return new BaseResponse<IEnumerable<CartItem>>()
+                    {
+                        Desciption = "[DeleteCartItem] : Товар в корзине не найден",
+                        //  StatusCode = StatusCode.UserNotFound,
+                    };
+                }
+
+               var result = await cartItemRepository.Remove(cartItem);
+
+
+                baseResponse.StatusCode = StatusCode.OK;
+          //      baseResponse.Data = result;
+
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[DeleteCartItem] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+            }
             return baseResponse;
         }
     }

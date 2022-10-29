@@ -23,18 +23,14 @@
 							<p class="card-text">@product.Price ₽</p>
 
 							<p class="card-text">@product.Description</p>
-
-							<a asp-action="DeleteCartItem" asp-route-id="@product.Id" class="btn btn-outline-primary">Удалить</a>
+							<form asp-controller="Cart" asp-action="DeleteCartItem" method="post" asp-route-cartId="@cart.Id">
+								<input type="submit" class="btn btn-outline-primary" value="Удалить"/>
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
 		}
-
-
-
-
-
 	}
 
 	else

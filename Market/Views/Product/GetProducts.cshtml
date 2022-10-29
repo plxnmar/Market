@@ -19,7 +19,10 @@
 							<p class="card-text">@product.Price</p>
 							<p class="card-text">@product.Category.Name</p>
 							<p class="card-text">@product.Description</p>
-							<a asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@product.Id" class="btn btn-success">В корзину</a>
+							<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@product.Id">
+								<input type="submit" class="btn btn-success" value="В корзину">
+							</form>
+
 							<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-secondary">Подробнее</a>
 							<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-primary">Изменить</a>
 						</div>

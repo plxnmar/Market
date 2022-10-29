@@ -70,7 +70,7 @@ namespace Market.Controllers
             var response = await productService.DeleteProduct(id);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                DeleteImage(response.Data.ImgPath);
+                await DeleteImage(response.Data.ImgPath);
 
                 return RedirectToAction("GetProducts");
             }
