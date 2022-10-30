@@ -33,7 +33,10 @@ namespace Market.Controllers
             var response = await productService.GetProducts();
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                return View(response.Data);
+                if (response.StatusCode == Domain.Enum.StatusCode.OK)
+                {
+                    return View(response.Data.ToList());
+                }
             }
             return RedirectToAction("Error");
         }
@@ -46,6 +49,7 @@ namespace Market.Controllers
 
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
+                //ViewBag.Categories = response.Data;
                 return View(response.Data);
             }
             return RedirectToAction("Error");

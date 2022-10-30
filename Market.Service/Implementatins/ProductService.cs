@@ -96,6 +96,7 @@ namespace Market.Service.Implementatins
 
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
                 baseResponse.Data = products;
+
             }
             catch (Exception ex)
             {

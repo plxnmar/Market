@@ -1,0 +1,10 @@
+﻿@*@model List<Market.Domain.Entity.Category>*@
+
+@{
+	foreach (var category in ViewBag.Categories)
+	{
+		<a href="@Url.Action("GetCategories","Category", new {id = category.Id})"
+   	class="list-group-item">@category.Name</a>
+
+	}
+}

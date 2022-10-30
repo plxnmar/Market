@@ -1,0 +1,22 @@
+﻿@{
+
+	var Categories = (IEnumerable<Market.Domain.Entity.Category>)ViewBag.NameDropDownList;
+
+	<div class="dropdown">
+		<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+			Каталог
+		</button>
+
+		<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+			@foreach (var category in Categories)
+			{
+				<li>
+					<a class="dropdown-item" href="@Url.Action("GetCategories","Category", new {id = category.Id})">@category.Name</a>
+				</li>
+			}
+		</ul>
+	</div>
+}
+
+
+

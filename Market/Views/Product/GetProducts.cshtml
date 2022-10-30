@@ -5,11 +5,21 @@
 		<a asp-action="SaveProduct" asp-route-id="0" class="btn btn-danger">Добавить продукт</a>
 	</div>
 
+
+	@*<div>
+	<a asp-action="GetCategories" asp-controller="Category"></a>
+	</div>*@
+
+	@*@await Html.PartialAsync("~/Views/Category/GetCategories.cshtml")*@
+
+	@*	<div class="categories">
+	<div id="categories-view" data-url="@Url.Action(action: "GetCategories", controller: "Category")"></div>
+	</div>*@
+
 	<div class="card-group">
 		@{
 			foreach (var product in Model)
 			{
-
 				<div class="card">
 					<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
 				 	style="height:18rem; width:100%; object-fit: cover;">
@@ -20,12 +30,13 @@
 						<p class="card-text">@product.Description</p>
 
 						<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@product.Id"
-					  method="post" data-ajax="true">
+					  	method="post" data-ajax="true">
 							<input type="submit" class="btn btn-success" value="В корзину">
 						</form>
 
 						<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-secondary">Подробнее</a>
 						<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-primary">Изменить</a>
+
 					</div>
 				</div>
 			}
@@ -37,5 +48,15 @@
 @section Scripts {
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
+
+	@*
+	<script>
+    $(document).ready(function () {
+        (function () {
+            var url = $("#categories-view").data("url");
+				$("#categories-view").load(url);
+        })();
+    });*@
+	@*</script>*@
 
 }

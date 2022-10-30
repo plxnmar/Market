@@ -68,8 +68,8 @@ namespace Market.Service.Implementatins
 
 
 
-              var result =  await cartItemRepository.Create(cart);
-             
+                var result = await cartItemRepository.Create(cart);
+
                 //await cartRepository.Update(user.Cart);
 
 
@@ -101,6 +101,11 @@ namespace Market.Service.Implementatins
                         Desciption = "[GetCartItems] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
+                }
+
+                if (user.Cart == null)
+                {
+                    var cart = await cartRepository.Create(new Cart() { User = user, CartItems = new List<CartItem>() });
                 }
 
                 var cartItems = user.Cart.CartItems;
@@ -144,11 +149,11 @@ namespace Market.Service.Implementatins
                     };
                 }
 
-               var result = await cartItemRepository.Remove(cartItem);
+                var result = await cartItemRepository.Remove(cartItem);
 
 
                 baseResponse.StatusCode = StatusCode.OK;
-          //      baseResponse.Data = result;
+                //      baseResponse.Data = result;
 
             }
             catch (Exception ex)

@@ -28,6 +28,9 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 						</li>
+						<li class="nav-item">
+							@await Component.InvokeAsync("DropDownList")
+						</li>
 					</ul>
 
 					<ul class="nav navbar-nav navbar-right">
@@ -39,25 +42,25 @@
 					@{
 						if (!User.Identity.IsAuthenticated)
 						{
-								<ul class="nav navbar-nav navbar-right">
-									<li class="nav-item">
-										<a class="nav-link text-dark" asp-area=""
-							   asp-controller="Account" asp-action="Login">Войти</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link text-dark" asp-area=""
-							   asp-controller="Account" asp-action="Register">Зарегистрироваться</a>
-									</li>
-								</ul>
+							<ul class="nav navbar-nav navbar-right">
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area=""
+							   	asp-controller="Account" asp-action="Login">Войти</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area=""
+							   	asp-controller="Account" asp-action="Register">Зарегистрироваться</a>
+								</li>
+							</ul>
 						}
 						else
 						{
-								<ul class="nav navbar-nav navbar-right">
-									<li class="nav-item">
-										<a class="nav-link text-dark" asp-area=""
-							   asp-controller="Account" asp-action="Logout">Выйти</a>
-									</li>
-								</ul>
+							<ul class="nav navbar-nav navbar-right">
+								<li class="nav-item">
+									<a class="nav-link text-dark" asp-area=""
+							   	asp-controller="Account" asp-action="Logout">Выйти</a>
+								</li>
+							</ul>
 						}
 					}
 				</div>
@@ -75,6 +78,9 @@
 			&copy; 2022 - Market - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 		</div>
 	</footer>
+	@*
+	@await Component.InvokeAsync("CategoriesList")*@
+
 
 	@*		@{
 	var loginViewModel = new Market.Domain.ViewModels.Account.LoginViewModel();
@@ -86,15 +92,23 @@
 
 
 	@section Scripts {
-	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
 
+		@*<script>
+	$(document).ready(function () {
+	(function () {
+	var url = $("#categories-view").data("url");
+	$("#categories-view").load(url);
+	})();
+	});
+	</script>*@
 	}
 
 
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="~/js/site.js" asp-append-version="true"></script>
-	@await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>
+		<script src="~/lib/jquery/dist/jquery.min.js"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="~/js/site.js" asp-append-version="true"></script>
+		@await RenderSectionAsync("Scripts", required: false)
+	</body>
+	</html>
