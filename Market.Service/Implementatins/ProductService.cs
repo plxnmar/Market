@@ -108,7 +108,8 @@ namespace Market.Service.Implementatins
         }
 
 
-        public async Task<IBaseResponse<IEnumerable<Product>>> GetCategoryProducts(int id) {
+        public async Task<IBaseResponse<IEnumerable<Product>>> GetCategoryProducts(int id)
+        {
             var baseResponse = new BaseResponse<IEnumerable<Product>>();
             try
             {
@@ -146,7 +147,7 @@ namespace Market.Service.Implementatins
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
                 }
 
-               
+
 
                 //string imageFilePath = Server.MapPath(@"~/uploaded/imagefilename.extension");
                 //System.IO.File.Delete("imageFilePath");
@@ -205,7 +206,12 @@ namespace Market.Service.Implementatins
                 product.Id = model.Id;
                 product.Name = model.Name;
                 product.Category = model.Category;
-                product.ImgPath = model.ImgPath;
+
+                if (model.UploadedImage != null)
+                {
+                    product.ImgPath = model.ImgPath;
+                }
+
                 product.CategoryId = model.Category.Id;
 
                 await productRepository.Update(product);

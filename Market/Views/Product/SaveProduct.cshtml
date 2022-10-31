@@ -12,8 +12,8 @@
 			<div style="text-align:center">
 				<h1>Изменить продукт</h1>
 			</div>
-			<form asp-controller="Product" asp-action="SaveProduct" method="post" class="row g-3" 
-			enctype="multipart/form-data">
+			<form asp-controller="Product" asp-action="SaveProduct" method="post" class="row g-3"
+				  enctype="multipart/form-data">
 				@*<div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>*@
 				<div class="mb-2">
 					<label class="form-label">Название</label>
@@ -36,12 +36,12 @@
 				</div>
 				<div class="mb-2">
 					<label for="formFile" class="form-label">Добавьте изображение</label>
-					@*<div>
-						@*<img src="@Model.ImgPath" alt="Product img" asp-append-version="true"
+					<div>
+						<img src="ImgPath" alt="Product img" asp-append-version="true"
 							 style="height:10rem; width:40%; object-fit: cover;" />
-					</div>*@
-					<input asp-for="UploadedImage"  value="@Model.UploadedImage"  class="form-control" type="file" >
-				
+					</div>
+					<input asp-for="UploadedImage" value="@Model.UploadedImage" class="form-control" type="file">
+
 				</div>
 
 				<div class="col-12">
