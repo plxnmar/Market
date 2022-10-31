@@ -3,20 +3,22 @@
 	var Categories = (IEnumerable<Market.Domain.Entity.Category>)ViewBag.NameDropDownList;
 
 	<div class="dropdown">
-		<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-			Каталог
-		</button>
+		<a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink"
+		role="button" data-bs-toggle="dropdown" aria-expanded="false">
+			Категории
+		</a>
 
-		<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+		<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
 			@foreach (var category in Categories)
 			{
 				<li>
-					<a class="dropdown-item" href="@Url.Action("GetCategories","Category", new {id = category.Id})">@category.Name</a>
+					<a class="dropdown-item"
+			   asp-controller="Product" asp-action="GetCategoryProducts" asp-route-id="@category.Id">@category.Name</a>
 				</li>
 			}
 		</ul>
 	</div>
 }
 
-
+@**href="@Url.Action("GetCategories","Category", new {id = category.Id})*/*@
 

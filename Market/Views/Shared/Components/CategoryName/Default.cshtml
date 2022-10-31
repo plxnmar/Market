@@ -1,0 +1,16 @@
+﻿@{
+
+	var Categories = (IEnumerable<Market.Domain.Entity.Category>)ViewBag.Category;
+
+	<ul class="list-group">
+		@foreach (var category in Categories)
+		{
+			<li class="list-group-item">
+				<a class="dropdown-item"
+		   asp-controller="Product" asp-action="GetCategoryProducts" asp-route-id="@category.Id">@category.Name</a>
+			</li>
+		}
+	</ul>
+}
+
+

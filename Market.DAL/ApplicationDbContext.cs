@@ -16,7 +16,7 @@ namespace Market.DAL
         {
             //Database.EnsureDeleted();
 
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
 
             //Category fruitCategory = new Category() { Name = "Фрукты" };
             //Category vegCategory = new Category() { Name = "Овощи" };

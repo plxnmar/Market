@@ -47,7 +47,7 @@ namespace Market.Service.Implementatins
                     Price = product.Price,
                     Category = product.Category,
                     CategoryId = product.Category.Id,
-                  //  UploadedImage = formFile,
+                    //  UploadedImage = formFile,
                     ImgPath = product.ImgPath,
                 };
             }
@@ -91,7 +91,7 @@ namespace Market.Service.Implementatins
                 var products = productRepository.GetAll();
                 if (products.Count() == 0)
                 {
-                    baseResponse.Desciption = "[GetProducrs] : Найдено 0 элементов";
+                    baseResponse.Desciption = "[GetProducts] : Найдено 0 элементов";
                 }
 
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
@@ -100,12 +100,36 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetProducrs] : {ex.Message}";
+                baseResponse.Desciption = $"[GetProducts] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
 
             return baseResponse;
         }
+
+
+        public async Task<IBaseResponse<IEnumerable<Product>>> GetCategoryProducts(int id) {
+            var baseResponse = new BaseResponse<IEnumerable<Product>>();
+            try
+            {
+                var products = productRepository.GetAll().Where(x => x.CategoryId == id);
+                if (products.Count() == 0)
+                {
+                    baseResponse.Desciption = "[GetCategoryProducts] : Найдено 0 элементов";
+                }
+
+                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
+                baseResponse.Data = products;
+
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[GetCategoryProducts] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+            }
+            return baseResponse;
+        }
+
 
         public async Task<IBaseResponse<Product>> DeleteProduct(int id)
         {

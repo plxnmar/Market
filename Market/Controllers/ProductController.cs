@@ -41,6 +41,25 @@ namespace Market.Controllers
             return RedirectToAction("Error");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCategoryProducts(int id)
+        {
+            var response = await productService.GetCategoryProducts(id);
+
+         //   var categoryName = await categoryService.GetCategoryName(id);
+
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                if (response.StatusCode == Domain.Enum.StatusCode.OK)
+                {
+                    ViewBag.CategoryId = id;
+                    return View("GetProducts", response.Data.ToList());
+                    //  return Redire("GetProducts"  response.Data.ToList());
+                }
+            }
+            return RedirectToAction("Error");
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> GetProduct(int id)

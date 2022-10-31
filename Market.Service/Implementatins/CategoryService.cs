@@ -67,5 +67,30 @@ namespace Market.Service.Implementatins
 
             return baseResponse;
         }
+
+        public async Task<IBaseResponse<string>> GetCategoryName(int id)
+        {
+            var baseResponse = new BaseResponse<string>();
+            try
+            {
+                var product = await baseRepository.Get(id);
+
+                if (product == null)
+                {
+                    baseResponse.Desciption = "Категория не найдена";
+                    baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
+                }
+                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
+                baseResponse.Data = product.Name;
+
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[GetCategory] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+            }
+
+            return baseResponse;
+        }
     }
 }

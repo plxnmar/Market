@@ -1,48 +1,67 @@
 ﻿@model IEnumerable<Market.Domain.Entity.Product>
 
-<div class="container">
-	<div class="col-12 my-3">
-		<a asp-action="SaveProduct" asp-route-id="0" class="btn btn-danger">Добавить продукт</a>
+@{
+	var CategoryId = ViewBag.CategoryId;
+}
+<div class="row">
+
+	<div class="col-2">
+		@await Component.InvokeAsync("CategoryList")
 	</div>
 
+	
 
-	@*<div>
-	<a asp-action="GetCategories" asp-controller="Category"></a>
-	</div>*@
+	<div class="col-10">
+	@*	<div class="col-12 my-3">
+			<a asp-action="SaveProduct" asp-route-id="0" class="btn btn-danger">Добавить продукт</a>
+		</div>*@
 
-	@*@await Html.PartialAsync("~/Views/Category/GetCategories.cshtml")*@
+		<div class="row">
 
-	@*	<div class="categories">
-	<div id="categories-view" data-url="@Url.Action(action: "GetCategories", controller: "Category")"></div>
-	</div>*@
+			<div class="row">
 
-	<div class="card-group">
-		@{
-			foreach (var product in Model)
-			{
-				<div class="card">
-					<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
-				 	style="height:18rem; width:100%; object-fit: cover;">
-					<div class="card-body">
-						<h5 class="card-title">@product.Name</h5>
-						<p class="card-text">@product.Price</p>
-						<p class="card-text">@product.Category.Name</p>
-						<p class="card-text">@product.Description</p>
+				@*@await Component.InvokeAsync("CategoryName")*@
+					@*<a asp-action="GetCategoryName" asp-controller="Category" asp-route-id="@ViewBag.CategoryId"></a>*@
+					@*@Html.Action("Menu", "Nav");*@
+				
+			
+			</div>
 
-						<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@product.Id"
-					  	method="post" data-ajax="true">
-							<input type="submit" class="btn btn-success" value="В корзину">
-						</form>
+			@*	<div class="card-group">*@
+			@{
+				foreach (var product in Model)
+				{
+							<div class="col-4">
+								<div class="card">
+									<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
+								 	style="height:18rem; width:100%; object-fit: cover;">
+									<div class="card-body">
+										<h5 class="card-title">@product.Name</h5>
+										<p class="card-text">@product.Price</p>
+										<p class="card-text">@product.Category.Name</p>
+										<p class="card-text">@product.Description</p>
 
-						<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-secondary">Подробнее</a>
-						<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-primary">Изменить</a>
+										<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@product.Id"
+							  method="post" data-ajax="true">
+											<input type="submit" class="btn btn-success" value="В корзину">
+										</form>
 
-					</div>
-				</div>
+										<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-secondary">Подробнее</a>
+										<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-primary">Изменить</a>
+
+									</div>
+								</div>
+							</div>
+				}
 			}
-		}
+		</div>
+
 	</div>
+
 </div>
+
+
+@*</div>*@
 
 
 @section Scripts {
