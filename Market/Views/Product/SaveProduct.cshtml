@@ -3,18 +3,19 @@
 @{
 	//для выпадающего списка категорий
 	var selectCategories = new SelectList(ViewBag.Categories, "Id", "Name");
-
+	var title = Model?.Id != 0 ? "Изменить продукт" : "Добавить продукт";
 }
+
+<link rel="stylesheet" href="~/css/uploadImage.css" asp-append-version="true" />
 
 <div class="container">
 	<div class="row justify-content-md-center">
 		<div class="col-6">
 			<div style="text-align:center">
-				<h1>Изменить продукт</h1>
+				<h1>@title</h1>
 			</div>
 			<form asp-controller="Product" asp-action="SaveProduct" method="post" class="row g-3"
 				  enctype="multipart/form-data">
-				@*<div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>*@
 				<div class="mb-2">
 					<label class="form-label">Название</label>
 					<input asp-for="Name" class="form-control" placeholder="Введите название" />
@@ -36,20 +37,42 @@
 				</div>
 				<div class="mb-2">
 					<label for="formFile" class="form-label">Добавьте изображение</label>
-					<div>
-						<img src="ImgPath" alt="Product img" asp-append-version="true"
+					@if (Model.ImgPath != "" && Model.ImgPath != null)
+					{
+						<div>
+							<img src="@Model.ImgPath" alt="Product img" asp-append-version="true"
 							 style="height:10rem; width:40%; object-fit: cover;" />
-					</div>
-					<input asp-for="UploadedImage" value="@Model.UploadedImage" class="form-control" type="file">
-
+						</div>
+					}
+					<label for="apply" class="border imgLabel">
+						<input asp-for="UploadedImage" value="@Model.UploadedImage" type="file"
+							   id="apply" class="imgInput form-control" accept="image/*, .image/jpeg, image/png">
+						Загрузить изображение
+					</label>
 				</div>
 
 				<div class="col-12">
-					<button type="submit" class="btn btn-primary">Сохранить</button>
+					<button asp-controller="Product" asp-action="SaveProduct" type="submit" class="btn btn-primary">Сохранить</button>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
 
+@section Scripts{
+	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
+	<script>
+		// переопределение валидации на стороне клиента
+		$.validator.methods.range = function (value, element, param) {
+			var globalizedValue = value.replace(",", ".");
+			return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+		}
+
+		$.validator.methods.number = function (value, element) {
+			return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+		}
+	</script>
+}
+   

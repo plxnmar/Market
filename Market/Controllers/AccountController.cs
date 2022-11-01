@@ -39,13 +39,16 @@ namespace Market.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
-            var response = await accountService.Login(loginViewModel);
-            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            if (ModelState.IsValid)
             {
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(response.Data));
+                var response = await accountService.Login(loginViewModel);
+                if (response.StatusCode == Domain.Enum.StatusCode.OK)
+                {
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(response.Data));
 
-                return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
+                }
             }
 
             return View();

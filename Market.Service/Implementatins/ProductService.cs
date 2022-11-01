@@ -35,11 +35,6 @@ namespace Market.Service.Implementatins
                 }
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
 
-                //var file = product.ImgPath;
-                //using var stream = new MemoryStream(File.ReadAllBytes(file).ToArray());
-                //var formFile = new FormFile(stream, 0, stream.Length, "streamFile", file.Split(@"\").Last());
-
-
                 baseResponse.Data = new ProductViewModel()
                 {
                     Name = product.Name,
@@ -47,8 +42,8 @@ namespace Market.Service.Implementatins
                     Price = product.Price,
                     Category = product.Category,
                     CategoryId = product.Category.Id,
-                    //  UploadedImage = formFile,
                     ImgPath = product.ImgPath,
+                    Id = product.Id,   
                 };
             }
             catch (Exception ex)

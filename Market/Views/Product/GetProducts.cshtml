@@ -9,13 +9,19 @@
 		@await Component.InvokeAsync("CategoryList")
 	</div>
 
-	<div class="col-10">
-		<div class="col-12 my-3">
-			<a asp-action="SaveProduct" asp-route-id="0" class="btn btn-danger">Добавить продукт</a>
-		</div>
 
-	
-			<div class="row">
+
+	<div class="col-10">
+
+		@if (User.IsInRole("admin"))
+		{
+			<div class="col-12 my-3">
+				<a asp-action="SaveProduct" asp-route-id="0" class="btn btn-danger">Добавить продукт</a>
+			</div>
+		}
+
+
+		<div class="row">
 
 
 			@*	<div class="card-group">*@
@@ -23,23 +29,33 @@
 				foreach (var product in Model)
 				{
 					<div class="col-4">
-						<div class="card">
+						<div class="card mb-3">
 							<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
-						 	style="height:18rem; width:100%; object-fit: cover;">
+						 	style="height:17rem; width:100%; object-fit: cover;">
 							<div class="card-body">
 								<h5 class="card-title">@product.Name</h5>
-								<p class="card-text">@product.Price</p>
+								<p class="card-text">@product.Price ₽</p>
 								<p class="card-text">@product.Category.Name</p>
-								<p class="card-text">@product.Description</p>
 
-								<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@product.Id"
-							  method="post" data-ajax="true">
-									<input type="submit" class="btn btn-success" value="В корзину">
-								</form>
+								<div class="d-inline-block">
+									<div class="d-inline-block">
+										<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@product.Id"
+									  method="post" data-ajax="true">
+											<input type="submit" class="btn btn-success" value="В корзину">
+										</form>
+									</div>
+									<div class="d-inline-block">
+										<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-outline-secondary">Подробнее</a>
+									</div>
+								</div>
 
-								<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-secondary">Подробнее</a>
-								<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-primary">Изменить</a>
-
+								@if (User.IsInRole("admin"))
+								{
+									<div class="row">
+										<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-primary">Изменить</a>
+										<a asp-action="DeleteProduct" asp-route-id="@product.Id" class="btn btn-primary">Удалить</a>
+									</div>
+								}
 							</div>
 						</div>
 					</div>
@@ -61,12 +77,12 @@
 
 	@*
 	<script>
-    $(document).ready(function () {
-        (function () {
-            var url = $("#categories-view").data("url");
-				$("#categories-view").load(url);
-        })();
-    });*@
+	$(document).ready(function () {
+	(function () {
+	var url = $("#categories-view").data("url");
+	$("#categories-view").load(url);
+	})();
+	});*@
 	@*</script>*@
 
-}
+	}

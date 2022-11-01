@@ -1,0 +1,32 @@
+
+.imgLabel {
+    display: block;
+    width: 60vw;
+    max-width: 300px;
+    /*margin: 0 auto;*/
+    font-size: 1em;
+    line-height: 2.0em;
+    text-align: center;
+}
+
+/*.imgLabel:hover {
+    background-color: cornflowerblue;
+}
+
+.imgLabel:active {
+    background-color: mediumaquamarine;
+}*/
+
+.imgInput {
+    border: 1px;
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    border: 2px;
+    border-color: black;
+}
+

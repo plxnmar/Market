@@ -46,7 +46,7 @@ namespace Market.Controllers
         {
             var response = await productService.GetCategoryProducts(id);
 
-         //   var categoryName = await categoryService.GetCategoryName(id);
+            //   var categoryName = await categoryService.GetCategoryName(id);
 
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
@@ -87,7 +87,7 @@ namespace Market.Controllers
             return RedirectToAction("Error");
         }
 
-        //  [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var response = await productService.DeleteProduct(id);
@@ -101,7 +101,7 @@ namespace Market.Controllers
         }
 
 
-        //  [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> SaveProduct(int id)
         {
@@ -109,16 +109,13 @@ namespace Market.Controllers
             var categories = (await categoryService.GetCategories()).Data.ToList();
             ViewBag.Categories = categories;
 
-
             //новый объект
             if (id == 0)
             {
                 var model = new ProductViewModel();
                 return View(model);
             }
-
             var response = await productService.GetProductViewModel(id);
-
 
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
@@ -127,36 +124,37 @@ namespace Market.Controllers
             return RedirectToAction("Error");
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> SaveProduct(ProductViewModel model)
         {
-            //if (ModelState.IsValid)
-            //{
-
-
-
-            if (model.UploadedImage != null)
+            if (ModelState.IsValid)
             {
-                var product = await productService.GetProduct(model.Id);
+                if (model.UploadedImage != null)
+                {
+                    var product = await productService.GetProduct(model.Id);
+                    await DeleteImage(product.Data.ImgPath);
+                    await SaveImage(model);
+                }
+                model.Category = (await categoryService.GetCategory(model.CategoryId)).Data;
 
-                await DeleteImage(product.Data.ImgPath);
-                await SaveImage(model);
+                if (model.Id == 0)
+                {
+                    await productService.AddProduct(model);
+                }
+                else
+                {
+                    await productService.EditProduct(model.Id, model);
+                }
+
+                return RedirectToAction("GetProducts");
             }
 
-
-            model.Category = (await categoryService.GetCategory(model.CategoryId)).Data;
-
-            if (model.Id == 0)
-            {
-                await productService.AddProduct(model);
-            }
-            else
-            {
-                await productService.EditProduct(model.Id, model);
-            }
-            //}
-
-            return RedirectToAction("GetProducts");
+            //получение всех категорий
+            var categories = (await categoryService.GetCategories()).Data.ToList();
+            ViewBag.Categories = categories;
+            return View(model);
+            //return RedirectToAction("SaveProduct", model.Id);
         }
 
         private async Task SaveImage(ProductViewModel model)

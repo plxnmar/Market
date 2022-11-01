@@ -1,9 +1,5 @@
 ﻿@model Market.Domain.ViewModels.Account.RegisterViewModel
 
-@*<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register"
-   data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрироваться</a>
-*@
-
 <div class="row justify-content-center">
 	<div class="col-4">
 		<form method="post" asp-controller="Account" asp-action="Register">
@@ -26,10 +22,6 @@
 				<input asp-for="PasswordConfirm" type="password" class="form-control" id="exampleInputPassword2">
 				<span asp-validation-for="PasswordConfirm" class="text-danger"></span>
 			</div>
-			@*	<div class="mb-3 form-check">
-			<input type="checkbox" class="form-check-input" id="exampleCheck1">
-			<label class="form-check-label" for="exampleCheck1">Запомнить</label>
-			</div>*@
 			<div class="text-center">
 				<button asp-action="Register" asp-controller="Account" type="submit" class="btn btn-primary">Отправить</button>
 			</div>

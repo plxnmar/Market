@@ -15,15 +15,18 @@ namespace Market.Domain.ViewModels.Product
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Введите название")]
-        public string Name { get; set; }
+        [MinLength(1, ErrorMessage = "Название должно иметь длину более 1 символа")]
+        [MaxLength(60, ErrorMessage = "Название должно иметь длину менее 60 символов")]
+        public string? Name { get; set; }
+
+        [MaxLength(800, ErrorMessage = "Описание должно иметь длину менее 800 символов")]
         public string? Description { get; set; }
-        [Required(ErrorMessage = "Введите стоимость")]
+
+        //[RegularExpression("([0-9]+)")]
         public decimal Price { get; set; }
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
         public int CategoryId { get; set; }
         public string? ImgPath { get; set; }
         public IFormFile? UploadedImage { get; set; }
-
-        //    public TypeProduct TypeProduct { get; set; }
     }
 }
