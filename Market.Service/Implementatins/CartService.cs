@@ -3,6 +3,7 @@ using Market.DAL.Repositories;
 using Market.Domain.Entity;
 using Market.Domain.Enum;
 using Market.Domain.Response;
+using Market.Domain.ViewModels.Cart;
 using Market.Domain.ViewModels.Product;
 using Market.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -87,16 +88,16 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
-        public async Task<IBaseResponse<IEnumerable<CartItem>>> GetCartItems(string userName)
+        public async Task<IBaseResponse<CartViewModel>> GetCart(string userName)
         {
-            var baseResponse = new BaseResponse<IEnumerable<CartItem>>();
+            var baseResponse = new BaseResponse<CartViewModel>();
             try
             {
                 var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
 
                 if (user == null)
                 {
-                    return new BaseResponse<IEnumerable<CartItem>>()
+                    return new BaseResponse<CartViewModel>()
                     {
                         Desciption = "[GetCartItems] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
@@ -108,10 +109,17 @@ namespace Market.Service.Implementatins
                     var cart = await cartRepository.Create(new Cart() { User = user, CartItems = new List<CartItem>() });
                 }
 
-                var cartItems = user.Cart.CartItems;
+                var cartItems = user.Cart.CartItems.ToList();
+
+                var viewModel = new CartViewModel
+                {
+                    CartItems = cartItems,
+                    CartTotalSum = GetTotal(cartItems)
+                };
+
 
                 baseResponse.StatusCode = StatusCode.OK;
-                baseResponse.Data = cartItems;
+                baseResponse.Data = viewModel;
             }
             catch (Exception ex)
             {
@@ -122,16 +130,16 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
-        public async Task<IBaseResponse<IEnumerable<CartItem>>> DeleteCartItem(string userName, int cartItemId)
+        public async Task<IBaseResponse<CartViewModel>> DeleteCartItem(string userName, int cartItemId)
         {
-            var baseResponse = new BaseResponse<IEnumerable<CartItem>>();
+            var baseResponse = new BaseResponse<CartViewModel>();
             try
             {
                 var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
 
                 if (user == null)
                 {
-                    return new BaseResponse<IEnumerable<CartItem>>()
+                    return new BaseResponse<CartViewModel>()
                     {
                         Desciption = "[DeleteCartItem] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
@@ -142,7 +150,7 @@ namespace Market.Service.Implementatins
 
                 if (cartItem == null)
                 {
-                    return new BaseResponse<IEnumerable<CartItem>>()
+                    return new BaseResponse<CartViewModel>()
                     {
                         Desciption = "[DeleteCartItem] : Товар в корзине не найден",
                         //  StatusCode = StatusCode.UserNotFound,
@@ -151,9 +159,17 @@ namespace Market.Service.Implementatins
 
                 var result = await cartItemRepository.Remove(cartItem);
 
-
                 baseResponse.StatusCode = StatusCode.OK;
-                //      baseResponse.Data = result;
+
+                var cartItems = user.Cart.CartItems.ToList();
+
+                var viewModel = new CartViewModel
+                {
+                    CartItems = cartItems,
+                    CartTotalSum = GetTotal(cartItems)
+                };
+
+                baseResponse.Data = viewModel;
 
             }
             catch (Exception ex)
@@ -162,6 +178,11 @@ namespace Market.Service.Implementatins
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
+        }
+
+        private decimal GetTotal(IEnumerable<CartItem> cartItems)
+        {
+            return cartItems.Sum(x => x.Product.Price * x.Count);
         }
     }
 }

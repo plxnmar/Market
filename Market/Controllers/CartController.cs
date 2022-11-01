@@ -2,6 +2,7 @@
 using Market.Domain.Entity;
 using Market.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Market.Controllers
@@ -17,10 +18,10 @@ namespace Market.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCart()
         {
-            var response = await cartService.GetCartItems(User.Identity.Name);
+            var response = await cartService.GetCart(User.Identity.Name);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                return View(response.Data.ToList());
+                return View(response.Data);
             }
             return View();
         }
@@ -35,10 +36,6 @@ namespace Market.Controllers
                 return NoContent();
             }
             return NoContent();
-
-            //  return RedirectToAction("Index", "Home");
-            //  return View();
-
         }
 
 
@@ -51,7 +48,9 @@ namespace Market.Controllers
             {
                 //return View("/");
                 // return RedirectToAction("GetCart");
-                  return NoContent();
+                //return NoContent();
+
+                return PartialView("_CartTotalSum", response.Data.CartTotalSum);
               //  return Content("done");
             }
              return NoContent();

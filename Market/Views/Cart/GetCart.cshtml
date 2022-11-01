@@ -1,55 +1,64 @@
-﻿@model List<Market.Domain.Entity.CartItem>
-
+﻿@model Market.Domain.ViewModels.Cart.CartViewModel
 
 @{
 	ViewBag.Title = "title";
 	Layout = "_Layout";
+
+	var cartItemList = Model.CartItems;
 }
 
 <div class="mb-3">
 	<h3>Корзина</h3>
 </div>
 
-
-@{
-	if (Model.Count() > 0)
-	{
-		<ul class="list-group list-group-lg list-group-flush list my--4">
-			@foreach (var cart in Model)
+<div class="row">
+	<div class="col-9">
+		@{
+			if (cartItemList.Count() > 0)
 			{
-				var product = cart.Product;
-				<li class="list-group-item px-0">
-					<div class="row g-0">
-						<div class="col-md-3">
-							<img src=@product.ImgPath class="img-fluid rounded-start" alt="..."
-					 	style="height:18rem; width:100%; object-fit: cover;">
-						</div>
-						<div class="col-md-8">
-							<div class="card-body">
-								<h5 class="card-title">@product.Name</h5>
-								<p class="card-text">@product.Price ₽</p>
-
-								<p class="card-text">@product.Description</p>
-
-								<form asp-controller="Cart" asp-action="DeleteCartItem" method="post" asp-route-cartId="@cart.Id"
-								data-ajax="true" data-ajax-success="deleteItem(this)">
-									<input type="submit" class="btn btn-outline-primary" value="Удалить" />
-								</form>
+				<ul class="list-group list-group-lg list-group-flush list my--4">
+					@foreach (var cart in cartItemList)
+					{
+						var product = cart.Product;
+						<li class="list-group-item px-0">
+							<div class="row g-0">
+								<div class="col-md-3">
+									<img src=@product.ImgPath class="img-fluid rounded-start" alt="..."
+							 	style="height:18rem; width:100%; object-fit: cover;">
+								</div>
+								<div class="col-md-8">
+									<div class="card-body">
+										<h5 class="card-title">@product.Name</h5>
+										<p class="card-text">@product.Price ₽</p>
+										<p class="card-text">@product.Description</p>
+										<form asp-controller="Cart" asp-action="DeleteCartItem" method="post" asp-route-cartId="@cart.Id"
+								  data-ajax="true" data-ajax-success="deleteItem(this)" data-ajax-update="#totalSum">
+											<input type="submit" class="btn btn-outline-primary" value="Удалить" />
+										</form>
+									</div>
+								</div>
 							</div>
-						</div>
-					</div>
-				</li>
+						</li>
+					}
+				</ul>
 			}
-		</ul>
-	}
+			else
+			{
+				<div class="mb-3">
+					<h5>Корзина пуста</h5>
+				</div>
+			}
+		}
+	</div>
+	<div class="col-3" id="totalSum">
+		<partial name="_CartTotalSum" model="@Model.CartTotalSum" />
+	</div>
+</div>
 
-	else
-	{
-		<div class="mb-3">
-			<h5>Корзина пуста</h5>
-		</div>
-	}
-}
+
+
+
+
 @section Scripts {
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>

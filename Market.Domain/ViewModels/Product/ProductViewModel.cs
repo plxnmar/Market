@@ -22,7 +22,7 @@ namespace Market.Domain.ViewModels.Product
         [MaxLength(800, ErrorMessage = "Описание должно иметь длину менее 800 символов")]
         public string? Description { get; set; }
 
-        //[RegularExpression("([0-9]+)")]
+        [RegularExpression("([0-9]+)", ErrorMessage ="Значение должно быть числом")]
         public decimal Price { get; set; }
         public Category? Category { get; set; }
         public int CategoryId { get; set; }
