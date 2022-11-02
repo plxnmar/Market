@@ -38,7 +38,16 @@ namespace Market.Controllers
             return NoContent();
         }
 
-
+        [HttpPost]
+        public async Task<IActionResult> UpdateCartItem(int Count, int id)
+        {
+            var response = await cartService.UpdateCartItem(User.Identity.Name, id, Count);
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                return RedirectToAction("GetCartTotalPartial");
+            }
+            return NoContent();
+        }
 
         [HttpPost]
         public async Task<IActionResult> DeleteCartItem(int cartId)
@@ -46,17 +55,21 @@ namespace Market.Controllers
             var response = await cartService.DeleteCartItem(User.Identity.Name, cartId);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                //return View("/");
-                // return RedirectToAction("GetCart");
-                //return NoContent();
-
-                return PartialView("_CartTotalSum", response.Data.CartTotalSum);
-              //  return Content("done");
+                return PartialView("_CartTotalSum", response.Data);
             }
-             return NoContent();
-           // return Content("something went wrong...");
-            //  return RedirectToAction("Index", "Home");
+            return NoContent();
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetCartTotalPartial()
+        {
+            var response = await cartService.GetCart(User.Identity.Name);
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                return PartialView("_CartTotalSum", response.Data);
+            }
+            return PartialView("_CartTotalSum", response.Data);
+        }
     }
 }

@@ -1,7 +1,15 @@
-﻿@model decimal
+﻿@model Market.Domain.ViewModels.Cart.CartViewModel
+
+<div class="container">
+	<div class="row row-cols-2">
+		<div class="col">Товары</div>
+		<div class="col">@Model.CartItemsCount шт</div>
+		<div class="col"><h5>Общая стоимость</h5></div>
+		<div class="col"><h5>@Model.CartTotalSum.ToString("0.#####") ₽</h5></div>
+	</div>
+</div>
 
 
 
-<h5>Общая стоимость</h5>
-<h5>@Model</h5>
+
 

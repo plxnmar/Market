@@ -59,22 +59,23 @@ namespace Market.Service.Implementatins
                     };
                 }
 
-
-                var cart = new CartItem()
+                var cartItem = user.Cart.CartItems.FirstOrDefault(x => x.ProductId == productId);
+                if (cartItem == null)
                 {
-                    Product = product,
-                    Cart = user.Cart,
-                    Count = 1,
-                };
+                    cartItem = new CartItem()
+                    {
+                        Product = product,
+                        Cart = user.Cart,
+                        Count = 1,
+                    };
 
-
-
-                var result = await cartItemRepository.Create(cart);
-
-                //await cartRepository.Update(user.Cart);
-
-
-                //var Carts = cartRepository.GetAll().ToList();
+                    var result = await cartItemRepository.Create(cartItem);
+                }
+                else
+                {
+                    cartItem.Count++;
+                    var result = await cartItemRepository.Update(cartItem);
+                }
 
                 baseResponse.StatusCode = StatusCode.OK;
                 baseResponse.Data = user.Cart.CartItems;
@@ -114,7 +115,8 @@ namespace Market.Service.Implementatins
                 var viewModel = new CartViewModel
                 {
                     CartItems = cartItems,
-                    CartTotalSum = GetTotal(cartItems)
+                    CartTotalSum = GetTotal(cartItems),
+                    CartItemsCount = GetCount(cartItems)
                 };
 
 
@@ -166,7 +168,8 @@ namespace Market.Service.Implementatins
                 var viewModel = new CartViewModel
                 {
                     CartItems = cartItems,
-                    CartTotalSum = GetTotal(cartItems)
+                    CartTotalSum = GetTotal(cartItems),
+                    CartItemsCount = GetCount(cartItems)
                 };
 
                 baseResponse.Data = viewModel;
@@ -184,5 +187,50 @@ namespace Market.Service.Implementatins
         {
             return cartItems.Sum(x => x.Product.Price * x.Count);
         }
+
+        private decimal GetCount(IEnumerable<CartItem> cartItems)
+        {
+            return cartItems.Sum(x => x.Count);
+        }
+
+
+        public async Task<IBaseResponse<IEnumerable<CartItem>>> UpdateCartItem(string userName, int cartItemId, int quantity)
+        {
+            var baseResponse = new BaseResponse<IEnumerable<CartItem>>();
+            try
+            {
+                var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
+
+                if (user == null)
+                {
+                    return new BaseResponse<IEnumerable<CartItem>>()
+                    {
+                        Desciption = "[UpdateCartItem] : Пользователь не найден",
+                        StatusCode = StatusCode.UserNotFound,
+                    };
+                }
+
+
+                var cartItem = user.Cart.CartItems.FirstOrDefault(x => x.Id == cartItemId);
+
+                if (cartItem != null)
+                {
+                    cartItem.Count = quantity;
+                    var result = await cartItemRepository.Update(cartItem);
+
+                }
+
+                baseResponse.StatusCode = StatusCode.OK;
+                baseResponse.Data = user.Cart.CartItems;
+
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[UpdateCartItem] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+            }
+            return baseResponse;
+        }
+
     }
 }

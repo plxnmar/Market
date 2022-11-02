@@ -17,6 +17,7 @@ namespace Market.Service.Interfaces
         Task<IBaseResponse<CartViewModel>> GetCart(string userName);
         Task<IBaseResponse<IEnumerable<CartItem>>> AddCartItem(string userName, int itemId);
         Task<IBaseResponse<CartViewModel>> DeleteCartItem(string userName, int cartItemId);
+        Task<IBaseResponse<IEnumerable<CartItem>>> UpdateCartItem(string userName, int cartItemId, int quantity);
         //Task<IBaseResponse<Product>> DeleteProduct(int id);
         //Task<IBaseResponse<bool>> AddProduct(ProductViewModel productViewModel);
         //Task<IBaseResponse<Product>> EditProduct(int id, ProductViewModel model);

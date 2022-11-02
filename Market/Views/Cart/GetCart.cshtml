@@ -5,6 +5,7 @@
 	Layout = "_Layout";
 
 	var cartItemList = Model.CartItems;
+	int j = 0;
 }
 
 <div class="mb-3">
@@ -12,14 +13,15 @@
 </div>
 
 <div class="row">
-	<div class="col-9">
+	<div class="col-8">
 		@{
 			if (cartItemList.Count() > 0)
 			{
+				j++;
 				<ul class="list-group list-group-lg list-group-flush list my--4">
-					@foreach (var cart in cartItemList)
+					@foreach (var cartItem in cartItemList)
 					{
-						var product = cart.Product;
+						var product = cartItem.Product;
 						<li class="list-group-item px-0">
 							<div class="row g-0">
 								<div class="col-md-3">
@@ -28,13 +30,29 @@
 								</div>
 								<div class="col-md-8">
 									<div class="card-body">
-										<h5 class="card-title">@product.Name</h5>
-										<p class="card-text">@product.Price ₽</p>
-										<p class="card-text">@product.Description</p>
-										<form asp-controller="Cart" asp-action="DeleteCartItem" method="post" asp-route-cartId="@cart.Id"
-								  data-ajax="true" data-ajax-success="deleteItem(this)" data-ajax-update="#totalSum">
-											<input type="submit" class="btn btn-outline-primary" value="Удалить" />
-										</form>
+										<div class="row">
+											<div class="col-11">
+												<h5 class="card-title">@product.Name</h5>
+												<p class="card-text">@product.Price ₽</p>
+												<p class="card-text">@product.Description</p>
+												<form asp-controller="Cart" asp-action="DeleteCartItem" method="post" asp-route-cartId="@cartItem.Id"
+										  data-ajax="true" data-ajax-success="deleteItem(this)" data-ajax-update="#totalSum">
+													<input type="submit" class="btn btn-outline-primary" value="Удалить" />
+												</form>
+											</div>
+											<div class="col-1">
+												<form asp-action="UpdateCartItem" asp-controller="Cart" asp-route-id="@cartItem.Id"
+										  method="post" data-ajax="true" data-ajax-success="" data-ajax-update="#totalSum">
+													<select asp-for="@cartItem.Count" name="Count" class="select_send_ajax selectpicker form-select float-end" style="width:5rem;">
+														@for (int i = 1; i <= 10; i++)
+														{
+															<option value="@i">@i</option>
+														}
+													</select>
+												</form>
+
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -50,8 +68,8 @@
 			}
 		}
 	</div>
-	<div class="col-3" id="totalSum">
-		<partial name="_CartTotalSum" model="@Model.CartTotalSum" />
+	<div class="col-4" id="totalSum">
+		<partial name="_CartTotalSum" model="@Model" />
 	</div>
 </div>
 
@@ -67,6 +85,24 @@
 		function deleteItem(form) {
 			$(form).parents('li').remove();
 		}
+
+		//function editQuantity(form) {
+		//	$(form).submit();
+		//}
+
+		//function selectQuantity(form) {
+		//	$('#'form).submit();
+		//}
+
+		$('.select_send_ajax').on('change', function () {
+			$(this).parents('form').submit();
+			console.log('отправка формы');
+		});
+
+						//$('form').submit(function (event) { //Отправка всех форм
+						//	console.log(123);
+						//	event.preventDefault();
+						//});
 	</script>
 }
 

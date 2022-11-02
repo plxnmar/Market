@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Market.Domain.ViewModels.Cart
 {
-	public class CartViewModel
+	public class CartItemViewModel
 	{
-        public List<CartItem> CartItems { get; set; }
-        public decimal CartTotalSum { get; set; }
-        public decimal CartItemsCount { get; set; }
+        public int Count { get; set; }
     }
 }
