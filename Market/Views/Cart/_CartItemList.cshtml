@@ -1,0 +1,62 @@
+﻿@model List<Market.Domain.Entity.CartItem>
+
+@{
+	var cartItemList = Model;
+}
+
+
+@{
+	if (cartItemList.Count > 0)
+	{
+		<ul class="list-group list-group-lg list-group-flush list my--4">
+			@foreach (var cartItem in cartItemList)
+			{
+				var product = cartItem.Product;
+				<li class="list-group-item px-0" style="height:15rem;">
+					<div class="row g-0">
+						<div class="col-md-3">
+							<img src=@product.ImgPath class="img-fluid rounded-start" alt="..."
+					 	style="height:14rem; width:100%; object-fit: cover;">
+						</div>
+						<div class="col-md-8">
+							<div class="card-body h-100">
+								<div class="row h-100">
+									<div class="col-8 d-flex flex-column">
+										<h5 class="card-title fw-normal">@product.Name</h5>
+										<div class="mt-auto">
+											<form asp-controller="Cart" asp-action="DeleteCartItem" method="post" asp-route-cartId="@cartItem.Id"
+									  data-ajax="true" data-ajax-success="deleteItem(this)" data-ajax-update="#TotalSumPartial">
+												<input type="submit" class="btn btn-outline-primary" value="Удалить" />
+											</form>
+										</div>
+									</div>
+									<div class="col-2" id="quantityCartItem">
+										<p class="card-text fw-bold">@((product.Price * cartItem.Count).ToString("0.#####")) ₽</p>
+									</div>
+									<div class="col-2">
+										<form asp-action="UpdateCartItem" asp-controller="Cart" asp-route-id="@cartItem.Id"
+								  method="post" data-ajax="true" data-ajax-update="#CartItemList" data-ajax-success="getTotalSumPartial(this)">
+											<select asp-for="@cartItem.Count" name="Count" class="select_send_ajax selectpicker form-select float-end" style="width:5rem;">
+												@for (int i = 1; i <= 10; i++)
+												{
+													<option value="@i">@i</option>
+												}
+											</select>
+										</form>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+			}
+		</ul>
+	}
+	else
+	{
+		<div class="mb-3">
+			<h5>Корзина пуста</h5>
+		</div>
+	}
+}

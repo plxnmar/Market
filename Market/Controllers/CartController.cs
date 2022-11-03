@@ -44,7 +44,7 @@ namespace Market.Controllers
             var response = await cartService.UpdateCartItem(User.Identity.Name, id, Count);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                return RedirectToAction("GetCartTotalPartial");
+                return RedirectToAction("GetCartListPartial");
             }
             return NoContent();
         }
@@ -71,5 +71,17 @@ namespace Market.Controllers
             }
             return PartialView("_CartTotalSum", response.Data);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCartListPartial()
+        {
+            var response = await cartService.GetCart(User.Identity.Name);
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                return PartialView("_CartItemList", response.Data.CartItems);
+            }
+            return NoContent();
+        }
+
     }
 }
