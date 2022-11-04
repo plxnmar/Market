@@ -1,0 +1,52 @@
+﻿@model Market.Domain.Entity.CartItem
+@*@model int*@
+@{
+	if (Model != null)
+	{
+		//<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@Model.Product.Id" method="post" data-ajax="true">
+		//	@if (User.Identity.IsAuthenticated)
+		//	{
+		//		<input type="submit" class="btn btn-success" value="В корзину">
+		//	}
+		//	else
+		//	{
+		//		<input type="submit" class="btn btn-success" value="В корзину" onclick="AddCartItem(this)">
+		//	}
+		//</form>
+		<div class="d-inline-block">
+			<form asp-action="DecreaseCartItem" asp-controller="Cart" asp-route-productId="@Model.Product.Id" method="post" data-ajax="true">
+				<input type="submit" class="btn btn-success" value="-">
+			</form>
+		</div>
+		
+
+		<span>@Model.Count</span>
+
+			<div class="d-inline-block">
+		<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@Model.Product.Id" method="post" data-ajax="true">
+			<input type="submit" class="btn btn-success" value="+">
+		</form>
+		</div>
+	}
+
+	else
+	{
+		<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@ViewBag.ProductId" method="post" data-ajax="true">
+			@if (User.Identity.IsAuthenticated)
+			{
+				<input type="submit" class="btn btn-success" value="В корзину">
+			}
+			else
+			{
+				<input type="submit" class="btn btn-success" value="В корзину" onclick="AddCartItem(this)">
+			}
+		</form>
+	}
+
+}
+
+
+
+
+
+

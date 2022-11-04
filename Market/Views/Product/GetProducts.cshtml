@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<Market.Domain.Entity.Product>
+@*@model Market.Domain.ViewModels.ProductsCart.ProductsCartItems*@
 
-@{
-	var CategoryId = ViewBag.CategoryId;
-}
+
+
 <div class="row">
 
 	<div class="col-2">
@@ -23,8 +23,6 @@
 
 		<div class="row">
 
-
-			@*	<div class="card-group">*@
 			@{
 				foreach (var product in Model)
 				{
@@ -39,10 +37,7 @@
 
 								<div class="d-inline-block">
 									<div class="d-inline-block">
-										<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@product.Id"
-									  method="post" data-ajax="true">
-											<input type="submit" class="btn btn-success" value="В корзину">
-										</form>
+										<div class="countItems" id="countItems-@product.Id" data-id="@product.Id"></div>
 									</div>
 									<div class="d-inline-block">
 										<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-outline-secondary">Подробнее</a>
@@ -68,12 +63,47 @@
 </div>
 
 
-@*</div>*@
+
 
 
 @section Scripts {
 	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
+
+	<script>
+
+		function AddCartItem(form) {
+			$.ajax({
+				url: '/Account/Login',
+				type: 'GET',
+				success: function (result) {
+					window.location.href = '/Account/Login';
+				}
+			});
+		}
+
+
+		$('.countItems').each(function (evt) {
+			var id = $(this).data('id');
+			var name = '#countItems-' + String(id);
+
+			$.ajax({
+				url: '/Cart/GetCartItemQuantityPartial',
+				type: 'GET',
+				data: {
+					'id': id
+				},
+				success: function (partialView) {
+
+					var count = name;
+					$(count).html(partialView);
+					$(count).show();
+
+				}
+			});
+		});
+
+	</script>
 
 	@*
 	<script>
@@ -85,4 +115,5 @@
 	});*@
 	@*</script>*@
 
-	}
+		}
+

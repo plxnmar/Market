@@ -1,12 +1,14 @@
 ﻿using Azure;
 using Market.Domain.Entity;
 using Market.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Market.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
         private readonly ICartService cartService;
@@ -32,10 +34,10 @@ namespace Market.Controllers
             var response = await cartService.AddCartItem(User.Identity.Name, productId);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                //  return RedirectToAction("GetProducts", "Product");
                 return NoContent();
             }
             return NoContent();
+
         }
 
         [HttpPost]
@@ -60,6 +62,18 @@ namespace Market.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DecreaseCartItem(int cartId)
+        {
+            var response = await cartService.DecreaseCartItem(User.Identity.Name, cartId);
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+            }
+            return NoContent();
+        }
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> GetCartTotalPartial()
@@ -79,6 +93,20 @@ namespace Market.Controllers
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 return PartialView("_CartItemList", response.Data.CartItems);
+            }
+            return NoContent();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCartItemQuantityPartial(int id)
+        {
+            // id - productID
+            var response = await cartService.GetCartItem(User.Identity.Name, id);
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+         
+                ViewBag.ProductId = id;
+                return PartialView("_CartItemQuantity", response.Data);
             }
             return NoContent();
         }

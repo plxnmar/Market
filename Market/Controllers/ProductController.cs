@@ -3,6 +3,7 @@ using Market.DAL.Interfaces;
 using Market.Domain.Entity;
 using Market.Domain.Response;
 using Market.Domain.ViewModels.Product;
+using Market.Service.Implementatins;
 using Market.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +18,15 @@ namespace Market.Controllers
     {
         private readonly IProductService productService;
         private readonly ICategoryService categoryService;
+        private readonly ICartService cartService;
         IWebHostEnvironment _appEnvironment;
 
         public ProductController(IProductService productService,
-            ICategoryService categoryService, IWebHostEnvironment appEnvironment)
+            ICategoryService categoryService, IWebHostEnvironment appEnvironment, ICartService cartService)
         {
             this.productService = productService;
             this.categoryService = categoryService;
+            this.cartService = cartService;
             _appEnvironment = appEnvironment;
         }
 
@@ -35,6 +38,7 @@ namespace Market.Controllers
             {
                 if (response.StatusCode == Domain.Enum.StatusCode.OK)
                 {
+                    //ViewBag.Cart = await cartService.GetCartItem(User.Identity.Name);
                     return View(response.Data.ToList());
                 }
             }

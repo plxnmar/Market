@@ -2,6 +2,7 @@
 using Market.Domain.Entity;
 using Market.Domain.Response;
 using Market.Domain.ViewModels.Product;
+using Market.Domain.ViewModels.ProductsCart;
 using Market.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -76,7 +77,6 @@ namespace Market.Service.Implementatins
             }
             return baseResponse;
         }
-
 
         public async Task<IBaseResponse<IEnumerable<Product>>> GetProducts()
         {

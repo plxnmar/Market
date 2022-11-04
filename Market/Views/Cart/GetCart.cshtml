@@ -4,9 +4,9 @@
 	ViewBag.Title = "title";
 	Layout = "_Layout";
 
-	var cartItemList = Model.CartItems;
 }
-
+@if(User.Identity.IsAuthenticated)
+{
 <div class="mb-3">
 	<h3>Корзина</h3>
 </div>
@@ -21,6 +21,12 @@
 		<partial name="_CartTotalSum" model="@Model" />
 	</div>
 </div>
+}
+else {
+<div class="mb-3">
+	<h3>Войдите для просмотра корзины</h3>
+</div>
+}
 
 
 
@@ -50,5 +56,8 @@
 					}
 				});
 		}
+
+
+		
 	</script>
 }

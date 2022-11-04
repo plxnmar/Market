@@ -32,16 +32,16 @@ namespace Market.Service.Implementatins
             this.cartRepository = cartRepository;
         }
 
-        public async Task<IBaseResponse<IEnumerable<CartItem>>> AddCartItem(string userName, int productId)
+        public async Task<IBaseResponse<CartItem>> AddCartItem(string userName, int productId)
         {
-            var baseResponse = new BaseResponse<IEnumerable<CartItem>>();
+            var baseResponse = new BaseResponse<CartItem>();
             try
             {
                 var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
 
                 if (user == null)
                 {
-                    return new BaseResponse<IEnumerable<CartItem>>()
+                    return new BaseResponse<CartItem>()
                     {
                         Desciption = "[AddCartItem] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
@@ -52,7 +52,7 @@ namespace Market.Service.Implementatins
 
                 if (product == null)
                 {
-                    return new BaseResponse<IEnumerable<CartItem>>()
+                    return new BaseResponse<CartItem>()
                     {
                         Desciption = "[AddCartItem] : Продукт не найден",
                         //StatusCode = StatusCode.UserNotFound,
@@ -78,7 +78,8 @@ namespace Market.Service.Implementatins
                 }
 
                 baseResponse.StatusCode = StatusCode.OK;
-                baseResponse.Data = user.Cart.CartItems;
+                //  baseResponse.Data = user.Cart.CartItems;
+                baseResponse.Data = cartItem; ;
 
             }
             catch (Exception ex)
@@ -122,6 +123,41 @@ namespace Market.Service.Implementatins
 
                 baseResponse.StatusCode = StatusCode.OK;
                 baseResponse.Data = viewModel;
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[GetCartItems] : {ex.Message}";
+                baseResponse.StatusCode = StatusCode.InternalServerError;
+            }
+
+            return baseResponse;
+        }
+
+        public async Task<IBaseResponse<CartItem>> GetCartItem(string userName, int productId)
+        {
+            var baseResponse = new BaseResponse<CartItem>();
+            try
+            {
+                var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
+
+                if (user == null)
+                {
+                    return new BaseResponse<CartItem>()
+                    {
+                        Desciption = "[GetCartItems] : Пользователь не найден",
+                        StatusCode = StatusCode.UserNotFound,
+                    };
+                }
+
+                if (user.Cart == null)
+                {
+                    var cart = await cartRepository.Create(new Cart() { User = user, CartItems = new List<CartItem>() });
+                }
+
+                var cartItem = user.Cart.CartItems.FirstOrDefault(x => x.Product.Id == productId);
+
+                baseResponse.StatusCode = StatusCode.OK;
+                baseResponse.Data = cartItem;
             }
             catch (Exception ex)
             {
@@ -193,7 +229,6 @@ namespace Market.Service.Implementatins
             return cartItems.Sum(x => x.Count);
         }
 
-
         public async Task<IBaseResponse<IEnumerable<CartItem>>> UpdateCartItem(string userName, int cartItemId, int quantity)
         {
             var baseResponse = new BaseResponse<IEnumerable<CartItem>>();
@@ -232,5 +267,64 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
+        public async Task<IBaseResponse<CartItem>> DecreaseCartItem(string userName, int cartItemId)
+        {
+            var baseResponse = new BaseResponse<CartItem>();
+            try
+            {
+                var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
+
+                if (user == null)
+                {
+                    return new BaseResponse<CartItem>()
+                    {
+                        Desciption = "[DeleteCartItem] : Пользователь не найден",
+                        StatusCode = StatusCode.UserNotFound,
+                    };
+                }
+
+                var cartItem = await cartItemRepository.GetAll().FirstOrDefaultAsync(x => x.Id == cartItemId);
+
+                if (cartItem == null)
+                {
+                    return new BaseResponse<CartItem>()
+                    {
+                        Desciption = "[DeleteCartItem] : Товар в корзине не найден",
+                        //  StatusCode = StatusCode.UserNotFound,
+                    };
+                }
+                if (cartItem.Count > 0)
+                {
+                    cartItem.Count--;
+                    baseResponse.Data = cartItem;
+                }
+                else
+                {
+                    var result = await cartItemRepository.Remove(cartItem);
+                    //baseResponse.Data = result;
+                }
+
+
+                baseResponse.StatusCode = StatusCode.OK;
+
+                //var cartItems = user.Cart.CartItems.ToList();
+
+                //var viewModel = new CartViewModel
+                //{
+                //    CartItems = cartItems,
+                //    CartTotalSum = GetTotal(cartItems),
+                //    CartItemsCount = GetCount(cartItems)
+                //};
+
+                //baseResponse.Data = viewModel;
+
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[DeleteCartItem] : {ex.Message}";
+                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+            }
+            return baseResponse;
+        }
     }
 }
