@@ -24,7 +24,7 @@
 									<div class="col-8 d-flex flex-column">
 										<h5 class="card-title fw-normal">@product.Name</h5>
 										<div class="mt-auto">
-											<form asp-controller="Cart" asp-action="DeleteCartItem" method="post" asp-route-cartId="@cartItem.Id"
+											<form asp-controller="Cart" asp-action="DeleteCartItem" method="post" asp-route-cartId="@cartItem.Id" asp-route-isDelete="true"
 									  data-ajax="true" data-ajax-success="deleteItem(this)" data-ajax-update="#TotalSumPartial">
 												<input type="submit" class="btn btn-outline-primary" value="Удалить" />
 											</form>

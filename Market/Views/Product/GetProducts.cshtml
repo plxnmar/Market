@@ -2,14 +2,35 @@
 @*@model Market.Domain.ViewModels.ProductsCart.ProductsCartItems*@
 
 
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
+
+
+
+<script>
+	function GetCount(productId) {
+		var id = productId;
+		var name = '#countItems-' + String(id);
+
+		$.ajax({
+			url: '/Cart/GetCartItemQuantityPartial',
+			type: 'GET',
+			data: {
+				'id': id
+			},
+			success: function (partialView) {
+				var count = name;
+				$(count).html(partialView);
+			}
+		});
+	}
+</script>
 
 <div class="row">
 
 	<div class="col-2">
 		@await Component.InvokeAsync("CategoryList")
 	</div>
-
-
 
 	<div class="col-10">
 
@@ -20,10 +41,9 @@
 			</div>
 		}
 
-
 		<div class="row">
-
 			@{
+
 				foreach (var product in Model)
 				{
 					<div class="col-4">
@@ -38,7 +58,11 @@
 								<div class="d-inline-block">
 									<div class="d-inline-block">
 										<div class="countItems" id="countItems-@product.Id" data-id="@product.Id"></div>
+										<script type='text/javascript'>
+											GetCount('@product.Id');
+										</script>
 									</div>
+
 									<div class="d-inline-block">
 										<a asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-outline-secondary">Подробнее</a>
 									</div>
@@ -56,10 +80,9 @@
 					</div>
 				}
 			}
+
 		</div>
-
 	</div>
-
 </div>
 
 
@@ -67,8 +90,7 @@
 
 
 @section Scripts {
-	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
+
 
 	<script>
 
@@ -82,9 +104,8 @@
 			});
 		}
 
-
-		$('.countItems').each(function (evt) {
-			var id = $(this).data('id');
+		function GetCountPartial(form) {
+			var id = $(form).data('id');
 			var name = '#countItems-' + String(id);
 
 			$.ajax({
@@ -98,10 +119,10 @@
 					var count = name;
 					$(count).html(partialView);
 					$(count).show();
-
 				}
 			});
-		});
+		}
+
 
 	</script>
 

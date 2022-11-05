@@ -9,6 +9,7 @@ using Market.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -59,7 +60,10 @@ namespace Market.Service.Implementatins
                     };
                 }
 
-                var cartItem = user.Cart.CartItems.FirstOrDefault(x => x.ProductId == productId);
+                //    var cartItem = await user.Cart.CartItems..FirstOrDefaultAsync(x => x.ProductId == productId);
+                var all =  cartItemRepository.GetAll();
+                var cartItem = await all.FirstOrDefaultAsync(x => x.ProductId == productId && x.Cart.UserId == user.Id);
+
                 if (cartItem == null)
                 {
                     cartItem = new CartItem()
@@ -79,7 +83,7 @@ namespace Market.Service.Implementatins
 
                 baseResponse.StatusCode = StatusCode.OK;
                 //  baseResponse.Data = user.Cart.CartItems;
-                baseResponse.Data = cartItem; ;
+                baseResponse.Data = cartItem; 
 
             }
             catch (Exception ex)
@@ -154,7 +158,9 @@ namespace Market.Service.Implementatins
                     var cart = await cartRepository.Create(new Cart() { User = user, CartItems = new List<CartItem>() });
                 }
 
-                var cartItem = user.Cart.CartItems.FirstOrDefault(x => x.Product.Id == productId);
+                //var cartItem = user.Cart.CartItems.FirstOrDefault(x => x.Product.Id == productId);
+                var cartItem = await cartItemRepository.GetAll().FirstOrDefaultAsync(x => x.ProductId == productId && x.Cart.UserId == user.Id);
+
 
                 baseResponse.StatusCode = StatusCode.OK;
                 baseResponse.Data = cartItem;
@@ -168,7 +174,7 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
-        public async Task<IBaseResponse<CartViewModel>> DeleteCartItem(string userName, int cartItemId)
+        public async Task<IBaseResponse<CartViewModel>> DeleteCartItem(string userName, int cartItemId, bool isFullDelete)
         {
             var baseResponse = new BaseResponse<CartViewModel>();
             try
@@ -195,7 +201,16 @@ namespace Market.Service.Implementatins
                     };
                 }
 
-                var result = await cartItemRepository.Remove(cartItem);
+                if (isFullDelete || cartItem.Count == 1)
+                {
+                    var result = await cartItemRepository.Remove(cartItem);
+                }
+                else 
+                {
+                    cartItem.Count--;
+                    var result = await cartItemRepository.Update(cartItem);
+                }
+
 
                 baseResponse.StatusCode = StatusCode.OK;
 
@@ -267,64 +282,64 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
-        public async Task<IBaseResponse<CartItem>> DecreaseCartItem(string userName, int cartItemId)
-        {
-            var baseResponse = new BaseResponse<CartItem>();
-            try
-            {
-                var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
+        //public async Task<IBaseResponse<CartItem>> DecreaseCartItem(string userName, int cartItemId)
+        //{
+        //    var baseResponse = new BaseResponse<CartItem>();
+        //    try
+        //    {
+        //        var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
 
-                if (user == null)
-                {
-                    return new BaseResponse<CartItem>()
-                    {
-                        Desciption = "[DeleteCartItem] : Пользователь не найден",
-                        StatusCode = StatusCode.UserNotFound,
-                    };
-                }
+        //        if (user == null)
+        //        {
+        //            return new BaseResponse<CartItem>()
+        //            {
+        //                Desciption = "[DeleteCartItem] : Пользователь не найден",
+        //                StatusCode = StatusCode.UserNotFound,
+        //            };
+        //        }
 
-                var cartItem = await cartItemRepository.GetAll().FirstOrDefaultAsync(x => x.Id == cartItemId);
+        //        var cartItem = await cartItemRepository.GetAll().FirstOrDefaultAsync(x => x.Id == cartItemId);
 
-                if (cartItem == null)
-                {
-                    return new BaseResponse<CartItem>()
-                    {
-                        Desciption = "[DeleteCartItem] : Товар в корзине не найден",
-                        //  StatusCode = StatusCode.UserNotFound,
-                    };
-                }
-                if (cartItem.Count > 0)
-                {
-                    cartItem.Count--;
-                    baseResponse.Data = cartItem;
-                }
-                else
-                {
-                    var result = await cartItemRepository.Remove(cartItem);
-                    //baseResponse.Data = result;
-                }
+        //        if (cartItem == null)
+        //        {
+        //            return new BaseResponse<CartItem>()
+        //            {
+        //                Desciption = "[DeleteCartItem] : Товар в корзине не найден",
+        //                //  StatusCode = StatusCode.UserNotFound,
+        //            };
+        //        }
+        //        if (cartItem.Count > 0)
+        //        {
+        //            cartItem.Count--;
+        //            baseResponse.Data = cartItem;
+        //        }
+        //        else
+        //        {
+        //            var result = await cartItemRepository.Remove(cartItem);
+        //            //baseResponse.Data = result;
+        //        }
 
 
-                baseResponse.StatusCode = StatusCode.OK;
+        //        baseResponse.StatusCode = StatusCode.OK;
 
-                //var cartItems = user.Cart.CartItems.ToList();
+        //        //var cartItems = user.Cart.CartItems.ToList();
 
-                //var viewModel = new CartViewModel
-                //{
-                //    CartItems = cartItems,
-                //    CartTotalSum = GetTotal(cartItems),
-                //    CartItemsCount = GetCount(cartItems)
-                //};
+        //        //var viewModel = new CartViewModel
+        //        //{
+        //        //    CartItems = cartItems,
+        //        //    CartTotalSum = GetTotal(cartItems),
+        //        //    CartItemsCount = GetCount(cartItems)
+        //        //};
 
-                //baseResponse.Data = viewModel;
+        //        //baseResponse.Data = viewModel;
 
-            }
-            catch (Exception ex)
-            {
-                baseResponse.Desciption = $"[DeleteCartItem] : {ex.Message}";
-                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
-            }
-            return baseResponse;
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        baseResponse.Desciption = $"[DeleteCartItem] : {ex.Message}";
+        //        baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+        //    }
+        //    return baseResponse;
+        //}
     }
 }

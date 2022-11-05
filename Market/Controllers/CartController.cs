@@ -52,9 +52,9 @@ namespace Market.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteCartItem(int cartId)
+        public async Task<IActionResult> DeleteCartItem(int cartId, bool isDelete)
         {
-            var response = await cartService.DeleteCartItem(User.Identity.Name, cartId);
+            var response = await cartService.DeleteCartItem(User.Identity.Name, cartId, isDelete);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 return PartialView("_CartTotalSum", response.Data);
@@ -62,15 +62,15 @@ namespace Market.Controllers
             return NoContent();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DecreaseCartItem(int cartId)
-        {
-            var response = await cartService.DecreaseCartItem(User.Identity.Name, cartId);
-            if (response.StatusCode == Domain.Enum.StatusCode.OK)
-            {
-            }
-            return NoContent();
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> DecreaseCartItem(int cartId)
+        //{
+        //    var response = await cartService.DecreaseCartItem(User.Identity.Name, cartId);
+        //    if (response.StatusCode == Domain.Enum.StatusCode.OK)
+        //    {
+        //    }
+        //    return NoContent();
+        //}
 
 
 
@@ -105,7 +105,7 @@ namespace Market.Controllers
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
          
-                ViewBag.ProductId = id;
+                ViewBag.ProductId = id;  
                 return PartialView("_CartItemQuantity", response.Data);
             }
             return NoContent();
