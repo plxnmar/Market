@@ -20,7 +20,9 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 
 
 // добавл€ем контекст ApplicationContext в качестве сервиса в приложение
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,
+    options => options.MigrationsAssembly("Market.DAL")));
+
 //services.AddControllersWithViews();
 
 // установка конфигурации подключени€
