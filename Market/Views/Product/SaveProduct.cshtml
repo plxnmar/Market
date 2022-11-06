@@ -8,7 +8,7 @@
 
 <link rel="stylesheet" href="~/css/uploadImage.css" asp-append-version="true" />
 
-<div class="container">
+<div class="container" >
 	<div class="row justify-content-md-center">
 		<div class="col-6">
 			<div style="text-align:center">
@@ -28,7 +28,7 @@
 				</div>
 				<div class="mb-2">
 					<label class="form-label">Описание</label>
-					<input asp-for="Description" class="form-control" placeholder="Введите описание" />
+					<textarea asp-for="Description" class="form-control" placeholder="Введите описание" rows="5"></textarea>	
 					<span asp-validation-for="Description" class="text-danger" />
 				</div>
 				<div class="mb-2">
@@ -39,12 +39,12 @@
 					<label for="formFile" class="form-label">Добавьте изображение</label>
 					@if (Model.ImgPath != "" && Model.ImgPath != null)
 					{
-						<div>
+						<div class="mb-2">
 							<img src="@Model.ImgPath" alt="Product img" asp-append-version="true"
 							 style="height:10rem; width:40%; object-fit: cover;" />
 						</div>
 					}
-					<label for="apply" class="border imgLabel">
+					<label for="apply" class="border imgLabel bg-white">
 						<input asp-for="UploadedImage" value="@Model.UploadedImage" type="file"
 							   id="apply" class="imgInput form-control" accept="image/*, .image/jpeg, image/png">
 						Загрузить изображение

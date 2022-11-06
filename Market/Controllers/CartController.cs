@@ -62,19 +62,6 @@ namespace Market.Controllers
             return NoContent();
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> DecreaseCartItem(int cartId)
-        //{
-        //    var response = await cartService.DecreaseCartItem(User.Identity.Name, cartId);
-        //    if (response.StatusCode == Domain.Enum.StatusCode.OK)
-        //    {
-        //    }
-        //    return NoContent();
-        //}
-
-
-
-
         [HttpGet]
         public async Task<IActionResult> GetCartTotalPartial()
         {

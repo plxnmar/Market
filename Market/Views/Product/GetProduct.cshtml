@@ -5,24 +5,102 @@
 	Layout = "_Layout";
 }
 
-<div class="container">
-	<div>
-		<div class="row g-0">
-			<div class="col-md-4">
-				<img src=@Model.ImgPath class="card-img-top embed-responsive-item" alt="..."
-					 style="height:18rem; width:100%; object-fit: cover;">
-			</div>
-			<div class="col-md-8">
-				<div class="card-body">
-					<h5 class="card-title">@Model?.Name</h5>
-					<p class="card-text">@Model?.Price</p>
-					<p class="card-text">@Model?.Description</p>
-					<p class="card-text"><small class="text-muted">Последнее обновление 3 мин. назад</small></p>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
+
+
+
+<script>
+	function GetCount(productId) {
+		var id = productId;
+		var name = '#countItems-' + String(id);
+
+		$.ajax({
+			url: '/Cart/GetCartItemQuantityPartial',
+			type: 'GET',
+			data: {
+				'id': id
+			},
+			success: function (partialView) {
+				var count = name;
+				$(count).html(partialView);
+			}
+		});
+	}
+</script>
+
+
+<div class="container bg-white">
+	<div class="row g-0 mb-4">
+		<div class="col-md-4">
+			<img src=@Model.ImgPath class="card-img-top rounded embed-responsive-item" alt="..."
+				 style="height:18rem; width:100%; object-fit: cover;">
+		</div>
+		<div class="col-md-8">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-10">
+						<div class="mb-3">
+							<h3 class="card-title">@Model?.Name</h3>
+							<p class="card-text fs-4">
+								<strong>@(Model?.Price.ToString("0.#####")) ₽</strong>
+							</p>
+						</div>
+						<div class="mb-3">
+							@if (User.Identity.IsAuthenticated)
+							{
+								<div class="countItems" id="countItems-@Model.Id" data-id="@Model.Id"></div>
+								<script type='text/javascript'>
+									GetCount('@Model.Id');
+								</script>
+							}
+							else
+							{
+								<input type="submit" class="btn btn-primary" value="В корзину" onclick="AddCartItem(this)">
+							}
+						</div>
+						<div class="mb-3">
+							<h6>Категория</h6>
+							<p class="card-text">@Model?.Category.Name</p>
+						</div>
+
+						<div>
+							<h6>Описание</h6>
+							<p class="card-text">@Model?.Description</p>
+						</div>
+
+					</div>
+
+
 				</div>
-			</div>
-			<div class="col-12">
-				<a asp-action="DeleteProduct" asp-route-id="@Model?.Id" class="btn btn-danger">Удалить</a>
+				@if (User.IsInRole("admin"))
+				{
+					<div class="col-12">
+						<a asp-action="DeleteProduct" asp-route-id="@Model?.Id" class="btn btn-danger">Удалить</a>
+					</div>
+				}
+
 			</div>
 		</div>
 	</div>
 </div>
+
+
+@section Scripts{
+
+
+	<script>
+
+		function AddCartItem(form) {
+			$.ajax({
+				url: '/Account/Login',
+				type: 'GET',
+				success: function (result) {
+					window.location.href = '/Account/Login';
+				}
+			});
+		}
+
+	</script>
+
+}

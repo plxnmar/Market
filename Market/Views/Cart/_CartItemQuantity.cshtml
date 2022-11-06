@@ -1,39 +1,40 @@
 ﻿@model Market.Domain.Entity.CartItem
 
+
+
 @{
 	if (Model != null)
 	{
-
 		<div class="d-inline-block">
-			<form asp-action="DeleteCartItem" asp-controller="Cart" asp-route-cartId="@Model.Id" asp-route-isDelete="false" method="post" data-ajax="true" data-id="@Model.Product.Id" data-ajax-success="GetCountPartial(this)">
-				<input type="submit" class="btn btn-success" value="-">
+			<form asp-action="DeleteCartItem" asp-controller="Cart" asp-route-cartId="@Model.Id" asp-route-isDelete="false" method="post" data-ajax="true" data-id="@Model.Product.Id" data-ajax-success="GetCount('@Model.Product.Id')">
+				<input type="submit" class="btn btn-primary" value="-">
 			</form>
 		</div>
-
-
-		<span>@Model.Count шт.</span>
+		<span><small class="text-muted">@Model.Count шт.</small></span>
 
 		<div class="d-inline-block">
-			<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@Model.Product.Id" method="post" data-ajax="true" data-id="@Model.Product.Id" data-ajax-success="GetCountPartial(this)">
-				<input type="submit" class="btn btn-success" value="+">
+			<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@Model.Product.Id" method="post" data-ajax="true" data-id="@Model.Product.Id" data-ajax-success="GetCount('@Model.Product.Id')">
+				@if (Model.Count < 10)
+				{
+					<input type="submit" class="btn btn-primary" value="+">
+				}
+				else
+				{
+					<input type="submit" class="btn btn-primary" value="+" disabled>
+				}
 			</form>
 		</div>
 	}
 
 	else
 	{
-		<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@ViewBag.ProductId" method="post" data-ajax="true" data-id="@ViewBag.ProductId" data-ajax-success="GetCountPartial(this)">
+		<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@ViewBag.ProductId" method="post" data-ajax="true" data-id="@ViewBag.ProductId" data-ajax-success="GetCount('@ViewBag.ProductId')">
 			@if (User.Identity.IsAuthenticated)
 			{
-				<input type="submit" class="btn btn-success" value="В корзину">
-			}
-			else
-			{
-				<input type="submit" class="btn btn-success" value="В корзину" onclick="AddCartItem(this)">
+				<input type="submit" class="btn btn-primary" value="В корзину">
 			}
 		</form>
 	}
-
 }
 
 

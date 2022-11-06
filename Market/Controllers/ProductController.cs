@@ -137,8 +137,12 @@ namespace Market.Controllers
                 if (model.UploadedImage != null)
                 {
                     var product = await productService.GetProduct(model.Id);
-                    await DeleteImage(product.Data.ImgPath);
+                    if (product.Data != null)
+                    {
+                        await DeleteImage(product.Data.ImgPath);      
+                    } 
                     await SaveImage(model);
+
                 }
                 model.Category = (await categoryService.GetCategory(model.CategoryId)).Data;
 
@@ -177,6 +181,7 @@ namespace Market.Controllers
 
             model.ImgPath = path;
         }
+
 
         private async Task DeleteImage(string path)
         {
