@@ -239,7 +239,7 @@ namespace Market.Service.Implementatins
             return cartItems.Sum(x => x.Product.Price * x.Count);
         }
 
-        private decimal GetCount(IEnumerable<CartItem> cartItems)
+        private int GetCount(IEnumerable<CartItem> cartItems)
         {
             return cartItems.Sum(x => x.Count);
         }

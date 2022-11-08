@@ -68,6 +68,13 @@ namespace Market.DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+           // для связи 1 к 1
+            modelBuilder.Entity<Cart>()
+            .HasOne(a => a.User)
+            .WithOne(a => a.Cart)
+            .HasForeignKey<User>(c => c.CartId);
+
             //modelBuilder.Entity<Product>().HasData(
             //        new Product { Id = 1, Name = "Банан", Description = "111", Price = 111 }
             //new Product { Id = 2, Name = "Булочка с корицей" },

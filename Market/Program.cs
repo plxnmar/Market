@@ -39,11 +39,14 @@ builder.Services.AddScoped<IBaseRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IBaseRepository<Category>, CategoryRepository>();
 builder.Services.AddScoped<IBaseRepository<Cart>, CartRepository>();
 builder.Services.AddScoped<IBaseRepository<CartItem>, CartItemRepository>();
+builder.Services.AddScoped<IBaseRepository<Order>, OrderRepository>();
+builder.Services.AddScoped<IBaseRepository<OrderItem>, OrderItemRepository>();
 
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 
 var app = builder.Build();

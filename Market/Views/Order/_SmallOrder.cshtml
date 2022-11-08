@@ -1,0 +1,41 @@
+﻿@model Market.Domain.ViewModels.Order.OrderViewModel
+
+<div class="card border-0 shadow-sm p-3 mb-5 rounded ">
+	<div class="card-body ">
+		<div class="mb-3">	
+			<div>
+				<button type="submit" onclick="PostFormOrder()" class="btn btn-success btn-lg w-100 fw-bold" style="font-size:1rem;" >Подтвердить заказ</button>
+			</div>
+			<div>
+				<p class="card-text"><small class="text-muted">Доступные способы и время доставки можно выбрать при оформлении заказа</small></p>
+			</div>
+		</div>
+		<div>
+			<div class="row">
+				<div class="col-sm-6">
+					<p class="text-start">Товары</p>
+				</div>
+				<div class="col-sm-6">
+					<p class="text-end">@Model.ItemsCount шт</p>
+				</div>
+			</div>
+			<hr />
+			<div class="row">
+				<div class="col-sm-6">
+					<h5 class="text-start">Общая стоимость</h5>
+				</div>
+				<div class="col-sm-6">
+					<h5 class="text-end">@Model.Total.ToString("0.#####") ₽</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+

@@ -1,0 +1,116 @@
+﻿@model Market.Domain.ViewModels.Order.OrderViewModel
+
+@{
+	var model = Model;
+}
+
+<div class="container">
+	<div class="row">
+		<div>
+			<h1>Оформление заказа</h1>
+		</div>
+		<div class="col-6">
+			<div class="mb-4">
+				<form asp-controller="Order" asp-action="SaveOrder" method="post" class="row g-3"
+					  enctype="multipart/form-data" id="FormOrder">
+					<div class="mb-2">
+						<label class="form-label">Имя</label>
+						<input asp-for="FirstName" class="form-control" placeholder="Введите имя" />
+						<span asp-validation-for="FirstName" class="text-danger" />
+					</div>
+					<div class="mb-2">
+						<label class="form-label">Фамилия</label>
+						<input asp-for="LastName" class="form-control" placeholder="Введите фамилию" />
+						<span asp-validation-for="LastName" class="text-danger" />
+					</div>
+					<div class="mb-2">
+						<label class="form-label">Адресс доставки</label>
+						<input asp-for="Address" class="form-control" placeholder="Введите адресс" />
+						<span asp-validation-for="Address" class="text-danger" />
+					</div>
+					<div class="mb-2">
+						<label class="form-label">Электронная почта</label>
+						<input asp-for="Email" class="form-control" placeholder="Введите эл.почту" />
+						<span asp-validation-for="Email" class="text-danger" />
+					</div>
+				</form>
+			</div>
+			<div class="mb-3">
+				<h4>Товары</h4>
+			</div>
+			<div>
+				<div class="row">
+					@foreach (var item in Model.OrderItems)
+					{
+
+						<a asp-action="GetProduct" asp-controller="Product" asp-route-id="@item.Product.Id" class="text-decoration-none text-dark">
+							<div class="card mb-2">
+								<div class="row">
+									<div class="col-md-3">
+										<img src=@item.Product.ImgPath class="img-fluid rounded-start" alt="..."
+										 style="height:4rem; width:100%; object-fit: cover;">
+
+										<div class="card-img-overlay p-1">
+											<span class="badge rounded-pill bg-light text-dark">
+												@((item.Quantity * item.Product.Price).ToString("0.#####")) ₽
+											</span>
+										</div>
+									</div>
+									<div class="col-md-9">
+										<div class="card-body">
+											<p class="card-text">@item.Product.Name</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</a>
+					}
+
+				</div>
+			</div>
+		</div>
+		<div class="col-4" id="SmallOrder">
+			<partial name="_SmallOrder" model="@Model" />
+		</div>
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+	<script>
+		//function deleteItem(form) {
+		//	$(form).parents('li').remove();
+		//}
+
+		//$(document).on('change', '.select_send_ajax', function () {
+		//	$(this).parents('form').submit();
+		//});
+
+		function PostFormOrder() {
+			document.getElementById('FormOrder').submit();
+		}
+																										////function getTotalSumPartial(form) {
+
+																										//$(document).ready(function () {
+
+																										//	$.ajax(
+																										//		{
+																										//			url: '/Order/GetSmallOrder',
+																										//			type: 'GET',
+
+
+																										//			success: function (partialView) {
+
+
+																										//				$('#SmallOrder').html(partialView);
+																										//				$('#SmallOrder').show();
+																										//			}
+																										//		})
+																										//});
+																														//}
+
+	</script>
+}

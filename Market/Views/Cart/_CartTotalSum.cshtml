@@ -3,13 +3,10 @@
 <div class="card border-0 shadow-sm p-3 mb-5 rounded ">
 	<div class="card-body ">
 		<div class="mb-3">
-			<form asp-controller="Cart" asp-action="DeleteCartItem" method="post"
-				  data-ajax="true" data-ajax-success="deleteItem(this)" data-ajax-update="#totalSum" class="w-100">
+			<form asp-controller="Order" asp-action="SaveOrder" asp-route-id="0" method="get" class="w-100">
 				<input type="submit" class="btn btn-success btn-lg w-100 fw-bold" style="font-size:1rem;" value="Оформить заказ" />
 			</form>
-
 			<p class="card-text"><small class="text-muted">Доступные способы и время доставки можно выбрать при оформлении заказа</small></p>
-
 		</div>
 		<div>
 			<div class="row">

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Market.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221106212742_OrdersAndOrderItemsAdded")]
-    partial class OrdersAndOrderItemsAdded
+    [Migration("20221107185527_CartAndOrdersToUserAdd")]
+    partial class CartAndOrdersToUserAdd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,9 +37,6 @@ namespace Market.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Carts");
                 });
@@ -210,6 +207,9 @@ namespace Market.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CartId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -218,25 +218,18 @@ namespace Market.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RoleId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CartId")
+                        .IsUnique()
+                        .HasFilter("[CartId] IS NOT NULL");
+
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Market.Domain.Entity.Cart", b =>
-                {
-                    b.HasOne("Market.Domain.Entity.User", "User")
-                        .WithOne("Cart")
-                        .HasForeignKey("Market.Domain.Entity.Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Market.Domain.Entity.CartItem", b =>
@@ -261,7 +254,7 @@ namespace Market.DAL.Migrations
             modelBuilder.Entity("Market.Domain.Entity.Order", b =>
                 {
                     b.HasOne("Market.Domain.Entity.User", "User")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -301,9 +294,17 @@ namespace Market.DAL.Migrations
 
             modelBuilder.Entity("Market.Domain.Entity.User", b =>
                 {
+                    b.HasOne("Market.Domain.Entity.Cart", "Cart")
+                        .WithOne("User")
+                        .HasForeignKey("Market.Domain.Entity.User", "CartId");
+
                     b.HasOne("Market.Domain.Entity.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
 
                     b.Navigation("Role");
                 });
@@ -311,6 +312,9 @@ namespace Market.DAL.Migrations
             modelBuilder.Entity("Market.Domain.Entity.Cart", b =>
                 {
                     b.Navigation("CartItems");
+
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Market.Domain.Entity.Category", b =>
@@ -330,8 +334,7 @@ namespace Market.DAL.Migrations
 
             modelBuilder.Entity("Market.Domain.Entity.User", b =>
                 {
-                    b.Navigation("Cart")
-                        .IsRequired();
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }
