@@ -39,59 +39,35 @@ namespace Market.Service.Implementatins
             this.orderItemRepository = orderItemRepository;
         }
 
-        //public async Task<IBaseResponse<OrderViewModel>> GetOrderViewModel(int id, string userName)
-        //{
-        //    var baseResponse = new BaseResponse<OrderViewModel>();
-        //    try
-        //    {
-        //        var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
+        public async Task<IBaseResponse<IEnumerable<Order>>> GetOrders(string userName)
+        {
+            var baseResponse = new BaseResponse<IEnumerable<Order>>();
+            try
+            {
+                var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
 
-        //        if (user == null)
-        //        {
-        //            return new BaseResponse<OrderViewModel>()
-        //            {
-        //                Desciption = "[GetOrderViewModel] : Пользователь не найден",
-        //                StatusCode = StatusCode.UserNotFound,
-        //            };
-        //        }
+                if (user == null)
+                {
+                    return new BaseResponse<IEnumerable<Order>>()
+                    {
+                        Desciption = "[GetCartItems] : Пользователь не найден",
+                        StatusCode = StatusCode.UserNotFound,
+                    };
+                }
 
-        //        var order = await orderRepository.Get(id);
+                var order = orderRepository.GetAll().Where(x => x.User.Name == userName);
+                baseResponse.StatusCode = StatusCode.OK;
+                baseResponse.Data = order;
+            }
+            catch (Exception ex)
+            {
+                baseResponse.Desciption = $"[GetCartItems] : {ex.Message}";
+                baseResponse.StatusCode = StatusCode.InternalServerError;
+            }
 
-        //        if (order == null)
-        //        {
-        //            return new BaseResponse<OrderViewModel>()
-        //            {
-        //                Data = new OrderViewModel(),
-        //                StatusCode = StatusCode.OK,
-        //            };
-        //        }
+            return baseResponse;
+        }
 
-        //        baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
-        //        baseResponse.Data = new OrderViewModel()
-        //        {
-        //            DateCreated = order.DateCreated,
-        //            Address = order.Address,
-        //            Email = order.Email,
-        //            FirstName = order.FirstName,
-        //            LastName = order.LastName,
-        //            Total = GetTotal(order.OrderItems),
-        //            ItemsCount = GetCount(order.OrderItems),
-        //            //Name = order.Name,
-        //            //Description = order.Description,
-        //            //Price = order.Price,
-        //            //Category = order.Category,
-        //            //CategoryId = order.Category.Id,
-        //            //ImgPath = order.ImgPath,
-        //            //Id = order.Id,
-        //        };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        baseResponse.Desciption = $"[GetOrderViewModel] : {ex.Message}";
-        //        baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
-        //    }
-        //    return baseResponse;
-        //}
 
         public async Task<IBaseResponse<OrderViewModel>> CreateOrderViewModel(string userName)
         {
