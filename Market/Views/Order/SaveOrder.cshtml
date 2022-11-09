@@ -1,9 +1,6 @@
 ﻿@model Market.Domain.ViewModels.Order.OrderViewModel
-
-@{
-	var model = Model;
-}
-
+@* data-ajax="true" data-ajax-url="/Order/SaveOrder"
+					  data-ajax-success="alert('успешно')" data-ajax-complete="alert('комплит')" data-ajax-error="alert('Error')"*@
 <div class="container">
 	<div class="row">
 		<div>
@@ -11,8 +8,9 @@
 		</div>
 		<div class="col-6">
 			<div class="mb-4">
-				<form asp-controller="Order" asp-action="SaveOrder" method="post" class="row g-3"
-					  enctype="multipart/form-data" id="FormOrder">
+				<form method="post" id="FormOrder"
+					  class="row g-3"
+					  enctype="multipart/form-data">
 					<div class="mb-2">
 						<label class="form-label">Имя</label>
 						<input asp-for="FirstName" class="form-control" placeholder="Введите имя" />
@@ -33,6 +31,23 @@
 						<input asp-for="Email" class="form-control" placeholder="Введите эл.почту" />
 						<span asp-validation-for="Email" class="text-danger" />
 					</div>
+
+					<input asp-for="Total" type="hidden" />
+
+					@for (int i = 0; i < Model.OrderItems.Count(); i++)
+					{
+						<input asp-for="OrderItems[i].OrderId" type="hidden" />
+						<input asp-for="OrderItems[i].ProductId" type="hidden" />
+						<input asp-for="OrderItems[i].Product.CategoryId" type="hidden" />
+						<input asp-for="OrderItems[i].Product.Description" type="hidden" />
+						<input asp-for="OrderItems[i].Product.CategoryId" type="hidden" />
+						<input asp-for="OrderItems[i].Product.ImgPath" type="hidden" />
+						<input asp-for="OrderItems[i].Product.Name" type="hidden" />
+						<input asp-for="OrderItems[i].Product.Price" type="hidden" />
+						<input asp-for="OrderItems[i].Quantity" type="hidden" />
+						<input asp-for="OrderItems[i].Price" type="hidden" />
+					}
+
 				</form>
 			</div>
 			<div class="mb-3">
@@ -42,8 +57,8 @@
 				<div class="row">
 					@foreach (var item in Model.OrderItems)
 					{
-
-						<a asp-action="GetProduct" asp-controller="Product" asp-route-id="@item.Product.Id" class="text-decoration-none text-dark">
+						<a asp-action="GetProduct" asp-controller="Product" asp-route-id="@item.ProductId"
+					   class="text-decoration-none text-dark">
 							<div class="card mb-2">
 								<div class="row">
 									<div class="col-md-3">
@@ -52,7 +67,7 @@
 
 										<div class="card-img-overlay p-1">
 											<span class="badge rounded-pill bg-light text-dark">
-												@((item.Quantity * item.Product.Price).ToString("0.#####")) ₽
+												@((item.Quantity * item.Price).ToString("0.#####")) ₽
 											</span>
 										</div>
 									</div>
@@ -75,42 +90,71 @@
 	</div>
 </div>
 
+
+
+<!-- Модальное окно в случае успешного создания заказа -->
+<div class="modal fade" id="SuccessModal" 
+	 data-bs-backdrop="static" data-bs-keyboard="false"
+	tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title  mx-auto" id="exampleModalLabel">Заказ создан!</h5>
+				@*<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>*@
+			</div>
+			@*<div class="modal-body">
+				<h4>Заказ создан!</h4>
+			</div>*@
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary mx-auto" data-bs-dismiss="modal" onclick="RedirectToProducts()">Продолжить покупки</button>
+@*				<button type="button" class="btn btn-primary">Сохранить изменения</button>*@
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
 @section Scripts{
+
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 	<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 
 	<script>
-		//function deleteItem(form) {
-		//	$(form).parents('li').remove();
-		//}
-
-		//$(document).on('change', '.select_send_ajax', function () {
-		//	$(this).parents('form').submit();
-		//});
-
 		function PostFormOrder() {
-			document.getElementById('FormOrder').submit();
+			$(function () {
+				$('#FormOrder').trigger('submit');
+			});
+			console.log("tttt");
 		}
-																										////function getTotalSumPartial(form) {
 
-																										//$(document).ready(function () {
+		$('#FormOrder').submit(function (event) {
+			event.preventDefault();
+			console.log("Form has submited");
+			var form = $(this);
+			$.ajax({
+				url: '/Order/SaveOrder',
+				type: 'POST',
+				data: form.serialize(),
+				success: function (result) {
+					$('#SuccessModal').modal('toggle');
+				}
+			});
+		});
 
-																										//	$.ajax(
-																										//		{
-																										//			url: '/Order/GetSmallOrder',
-																										//			type: 'GET',
+		function RedirectToProducts() {
+			$.ajax({
+				url: '/Product/GetProducts',
+				type: 'Get',
+				success: function (result) {
 
-
-																										//			success: function (partialView) {
-
-
-																										//				$('#SmallOrder').html(partialView);
-																										//				$('#SmallOrder').show();
-																										//			}
-																										//		})
-																										//});
-																														//}
-
+					window.location.href = '/Product/GetProducts';
+					//$('#SuccessModal').modal('toggle');
+				}
+			});
+		}
+																							
 	</script>
 }

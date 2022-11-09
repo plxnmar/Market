@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Diagnostics;
 using System.IO;
 
@@ -95,14 +96,25 @@ namespace Market.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveOrder(OrderViewModel orderViewModel)
         {
-            var response = await orderService.AddOrder(User.Identity.Name, orderViewModel);
-
-            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            //для отмены валидации списка
+            for (int i = 0; i < orderViewModel.OrderItems.Count; i++)
             {
-                //return View(response.Data);
-                return RedirectToAction("GetCart", "Cart");
+                var a = ModelState.Remove("OrderItems[" + i + "].Order");
             }
-            return RedirectToAction("Error");
+
+
+            if (ModelState.IsValid)
+            {
+                var response = await orderService.AddOrder(User.Identity.Name, orderViewModel);
+
+                if (response.StatusCode == Domain.Enum.StatusCode.OK)
+                {
+                    //return View(response.Data);
+                    //  return RedirectToAction("GetCart", "Cart");
+                    return View(orderViewModel);
+                }
+            }
+            return View(orderViewModel);
         }
 
         //[HttpGet]

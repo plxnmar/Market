@@ -7,7 +7,7 @@
 	{
 		<div class="d-inline-block">
 			<form asp-action="DeleteCartItem" asp-controller="Cart" asp-route-cartId="@Model.Id" asp-route-isDelete="false" method="post" data-ajax="true" data-id="@Model.Product.Id" data-ajax-success="GetCount('@Model.Product.Id')">
-				<input type="submit" class="btn btn-primary" value="-">
+				<input type="submit" class="btn btn-outline-primary" value="-">
 			</form>
 		</div>
 		<span><small class="text-muted">@Model.Count шт.</small></span>
@@ -16,11 +16,11 @@
 			<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@Model.Product.Id" method="post" data-ajax="true" data-id="@Model.Product.Id" data-ajax-success="GetCount('@Model.Product.Id')">
 				@if (Model.Count < 10)
 				{
-					<input type="submit" class="btn btn-primary" value="+">
+					<input type="submit" class="btn btn-outline-primary" value="+">
 				}
 				else
 				{
-					<input type="submit" class="btn btn-primary" value="+" disabled>
+					<input type="submit" class="btn btn-outline-primary" value="+" disabled>
 				}
 			</form>
 		</div>

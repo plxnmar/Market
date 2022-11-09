@@ -115,8 +115,8 @@ namespace Market.Service.Implementatins
                 var orderViewModel = new OrderViewModel()
                 {
                     OrderItems = orderItems,
-                    Total = GetTotal(order.OrderItems),
-                    ItemsCount = GetCount(order.OrderItems),
+                    Total = GetTotal(orderItems),
+                    ItemsCount = GetCount(orderItems),
                 };
 
                 baseResponse.StatusCode = StatusCode.OK;
@@ -156,12 +156,29 @@ namespace Market.Service.Implementatins
                     Address = orderViewModel.Address,
                     FirstName = orderViewModel.FirstName,
                     LastName = orderViewModel.LastName,
+                    //  OrderItems = orderViewModel.OrderItems,
                     Total = orderViewModel.Total,
                     User = user,
                 };
 
-                order.OrderItems = CreateOrderItems(user, order);
-                order.Total = GetTotal(order.OrderItems);
+                var orderItems = new List<OrderItem>();
+
+                foreach (var orderItem in orderViewModel.OrderItems)
+                {
+                    var product = await productRepository.Get(orderItem.ProductId);
+                    orderItems.Add(
+                        new OrderItem()
+                        {
+                            Product = product,
+                            Price = orderItem.Price,
+                            Quantity = orderItem.Quantity,
+                        });
+                }
+
+                order.OrderItems = orderItems;
+
+
+
                 await orderRepository.Create(order);
                 baseResponse.StatusCode = StatusCode.OK;
 
@@ -177,7 +194,7 @@ namespace Market.Service.Implementatins
 
         private decimal GetTotal(IEnumerable<OrderItem> orderItems)
         {
-            return orderItems.Sum(x => x.Product.Price * x.Quantity);
+            return orderItems.Sum(x => x.Price * x.Quantity);
         }
 
         private int GetCount(IEnumerable<OrderItem> orderItems)
@@ -197,6 +214,8 @@ namespace Market.Service.Implementatins
                     new OrderItem()
                     {
                         Product = cartItem.Product,
+                        ProductId = cartItem.ProductId,
+                        Price = cartItem.Product.Price,
                         Quantity = cartItem.Count,
                     });
             }
