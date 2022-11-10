@@ -1,105 +1,119 @@
 ﻿@model Market.Domain.Entity.Product
 
-@{
-	ViewBag.Title = "title";
-	Layout = "_Layout";
-}
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
-
-
-
-<script>
-	function GetCount(productId) {
-		var id = productId;
-		var name = '#countItems-' + String(id);
-
-		$.ajax({
-			url: '/Cart/GetCartItemQuantityPartial',
-			type: 'GET',
-			data: {
-				'id': id
-			},
-			success: function (partialView) {
-				var count = name;
-				$(count).html(partialView);
-			}
-		});
-	}
-</script>
-
-
-<div class="container bg-white">
-	<div class="row g-0 mb-4">
-		<div class="col-md-4">
-			<img src=@Model.ImgPath class="card-img-top rounded embed-responsive-item" alt="..."
-				 style="height:18rem; width:100%; object-fit: cover;">
-		</div>
-		<div class="col-md-8">
-			<div class="card-body">
+<div class="modal-content">
+	<div class="modal-header">
+		@*<h5 class="modal-title" id="exampleModalLabel">Заголовок модального окна</h5>*@
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+	</div>
+	<div class="modal-body">
+		<div class="row g-0 mb-4">
+			<div class="col-md-5">
+				<img src=@Model.ImgPath class="card-img-top rounded embed-responsive-item" alt="..."
+					 style="height:10rem; width:100%; object-fit: cover;">
+			</div>
+			<div class="col-md-7">
 				<div class="row">
 					<div class="col-10">
-						<div class="mb-3">
-							<h3 class="card-title">@Model?.Name</h3>
+						<div class="mb-3 ms-3">
+							<h4 class="card-title">@Model?.Name</h4>
 							<p class="card-text fs-4">
 								<strong>@(Model?.Price.ToString("0.#####")) ₽</strong>
 							</p>
 						</div>
-						<div class="mb-3">
+						<div class="mb-3 ms-3">
 							@if (User.Identity.IsAuthenticated)
 							{
-								<div class="countItems" id="countItems-@Model.Id" data-id="@Model.Id"></div>
+								<div class="countItems countItems-@Model.Id" data-id="@Model.Id"></div>
+
 								<script type='text/javascript'>
 									GetCount('@Model.Id');
 								</script>
+						
 							}
 							else
 							{
 								<input type="submit" class="btn btn-primary" value="В корзину" onclick="AddCartItem(this)">
 							}
 						</div>
-						<div class="mb-3">
-							<h6>Категория</h6>
-							<p class="card-text">@Model?.Category.Name</p>
-						</div>
-
-						<div>
-							<h6>Описание</h6>
-							<p class="card-text">@Model?.Description</p>
-						</div>
-
 					</div>
 
-
+					@if (User.IsInRole("admin"))
+					{
+						<div class="col-12">
+							<a asp-action="DeleteProduct" asp-route-id="@Model?.Id" class="btn btn-danger">Удалить</a>
+						</div>
+					}
 				</div>
-				@if (User.IsInRole("admin"))
-				{
-					<div class="col-12">
-						<a asp-action="DeleteProduct" asp-route-id="@Model?.Id" class="btn btn-danger">Удалить</a>
-					</div>
-				}
+			</div>
 
+			<div class="row mt-3">
+				<div class="mb-3">
+					<h6>Категория</h6>
+					<p class="card-text">@Model?.Category.Name</p>
+				</div>
+
+				<div>
+					<h6>Описание</h6>
+					<p class="card-text">@Model?.Description</p>
+				</div>
 			</div>
 		</div>
+	</div>
+	<div class="modal-footer">
+		@*<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>*@
 	</div>
 </div>
 
 
-@section Scripts{
+@section Scripts
+{
+	
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
 
 
 	<script>
 
-		function AddCartItem(form) {
-			$.ajax({
-				url: '/Account/Login',
-				type: 'GET',
-				success: function (result) {
-					window.location.href = '/Account/Login';
-				}
-			});
-		}
+
+		//$(".countItems").load(function () {
+		//	var myId = $(this).data("id");
+		//	console.log(myId);
+		//	//$('.myClass').attr('id', myId);
+		//});
+
+
+		//$(function () {
+		//var plant = document.getElementById('strawberry-plant');
+		//var fruitCount = plant.getAttribute('data-fruit'); // fruitCount = '12'
+
+			//console.log(1);
+			//var id = productId;
+			//var name = '#countItems-' + String(id);
+		
+			//$.ajax({
+			//	url: '/Cart/GetCartItemQuantityPartial',
+			//	type: 'GET',
+			//	data: {
+			//		'id': id
+			//	},
+			//	success: function (partialView) {
+			//		var count = name;
+			//		$(count).html(partialView);
+			//	}
+			//});
+		//});
+
+
+		//function AddCartItem(form) {
+		//	$.ajax({
+		//		url: '/Account/Login',
+		//		type: 'GET',
+		//		success: function (result) {
+		//			window.location.href = '/Account/Login';
+		//		}
+		//	});
+		//}
 
 	</script>
 

@@ -73,7 +73,7 @@ namespace Market.Controllers
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 //ViewBag.Categories = response.Data;
-                return View(response.Data);
+                return PartialView(response.Data);
             }
             return RedirectToAction("Error");
         }
