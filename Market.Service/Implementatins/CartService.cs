@@ -35,7 +35,7 @@ namespace Market.Service.Implementatins
 
         public async Task<IBaseResponse<CartItem>> AddCartItem(string userName, int productId)
         {
-            var baseResponse = new BaseResponse<CartItem>();
+            //var baseResponse = new BaseResponse<CartItem>();
             try
             {
                 var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
@@ -61,7 +61,7 @@ namespace Market.Service.Implementatins
                 }
 
                 //    var cartItem = await user.Cart.CartItems..FirstOrDefaultAsync(x => x.ProductId == productId);
-                var all =  cartItemRepository.GetAll();
+                var all = cartItemRepository.GetAll();
                 var cartItem = await all.FirstOrDefaultAsync(x => x.ProductId == productId && x.Cart.UserId == user.Id);
 
                 if (cartItem == null)
@@ -81,17 +81,24 @@ namespace Market.Service.Implementatins
                     var result = await cartItemRepository.Update(cartItem);
                 }
 
-                baseResponse.StatusCode = StatusCode.OK;
-                //  baseResponse.Data = user.Cart.CartItems;
-                baseResponse.Data = cartItem; 
+                return new BaseResponse<CartItem>()
+                {
+                    StatusCode = StatusCode.OK,
+                    //  baseResponse.Data = user.Cart.CartItems;
+                    Data = cartItem,
+                };
+
 
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[AddCartItem] : {ex.Message}";
-                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
+                return new BaseResponse<CartItem>()
+                {
+                    Desciption = $"[AddCartItem] : {ex.Message}",
+                    StatusCode = Domain.Enum.StatusCode.InternalServerError,
+                };
+
             }
-            return baseResponse;
         }
 
         public async Task<IBaseResponse<CartViewModel>> GetCart(string userName)
@@ -205,7 +212,7 @@ namespace Market.Service.Implementatins
                 {
                     var result = await cartItemRepository.Remove(cartItem);
                 }
-                else 
+                else
                 {
                     cartItem.Count--;
                     var result = await cartItemRepository.Update(cartItem);
@@ -282,64 +289,6 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
-        //public async Task<IBaseResponse<CartItem>> DecreaseCartItem(string userName, int cartItemId)
-        //{
-        //    var baseResponse = new BaseResponse<CartItem>();
-        //    try
-        //    {
-        //        var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
 
-        //        if (user == null)
-        //        {
-        //            return new BaseResponse<CartItem>()
-        //            {
-        //                Desciption = "[DeleteCartItem] : Пользователь не найден",
-        //                StatusCode = StatusCode.UserNotFound,
-        //            };
-        //        }
-
-        //        var cartItem = await cartItemRepository.GetAll().FirstOrDefaultAsync(x => x.Id == cartItemId);
-
-        //        if (cartItem == null)
-        //        {
-        //            return new BaseResponse<CartItem>()
-        //            {
-        //                Desciption = "[DeleteCartItem] : Товар в корзине не найден",
-        //                //  StatusCode = StatusCode.UserNotFound,
-        //            };
-        //        }
-        //        if (cartItem.Count > 0)
-        //        {
-        //            cartItem.Count--;
-        //            baseResponse.Data = cartItem;
-        //        }
-        //        else
-        //        {
-        //            var result = await cartItemRepository.Remove(cartItem);
-        //            //baseResponse.Data = result;
-        //        }
-
-
-        //        baseResponse.StatusCode = StatusCode.OK;
-
-        //        //var cartItems = user.Cart.CartItems.ToList();
-
-        //        //var viewModel = new CartViewModel
-        //        //{
-        //        //    CartItems = cartItems,
-        //        //    CartTotalSum = GetTotal(cartItems),
-        //        //    CartItemsCount = GetCount(cartItems)
-        //        //};
-
-        //        //baseResponse.Data = viewModel;
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        baseResponse.Desciption = $"[DeleteCartItem] : {ex.Message}";
-        //        baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
-        //    }
-        //    return baseResponse;
-        //}
     }
 }

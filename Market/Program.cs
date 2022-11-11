@@ -71,8 +71,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// получение данных
-//app.MapGet("/", (ApplicationDbContext db) => db.Products.ToList());
 
 
 app.Run();

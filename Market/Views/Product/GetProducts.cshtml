@@ -1,33 +1,9 @@
 ﻿@model IEnumerable<Market.Domain.Entity.Product>
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
-
-@*<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
-*@
-
-<script>
-	function GetCount(productId) {
-		var id = productId;
-		var name = '.countItems-' + String(id);
-
-		$.ajax({
-			url: '/Cart/GetCartItemQuantityPartial',
-			type: 'GET',
-			data: {
-				'id': id
-			},
-			success: function (partialView) {
-				var count = name;
-				$(count).each(function () {
-					$(this).html(partialView);
-					console.log(this);
-				});
-				}
-		});
-	}
-</script>
+@{
+	ViewBag.Title = "title";
+	Layout = "_Layout";
+}
 
 <div class="row">
 
@@ -49,50 +25,47 @@
 
 				foreach (var product in Model)
 				{
-							<div class="col-3">
-								<div class="card mb-3" style="border: 0px">
-									<a href="" class="ProductImg" data-id="@product.Id">
-										<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
-									 	style="height:17rem; width:100%; object-fit: cover;">
-									</a>
-									<div class="my-2">
+					<div class="col-3">
+						<div class="card mb-3" style="border: 0px">
+							<a href="" class="ProductImg" data-id="@product.Id">
+								<img src=@product.ImgPath class="card-img-top embed-responsive-item" alt="..."
+							 	style="height:17rem; width:100%; object-fit: cover;">
+							</a>
+							<div class="my-2">
 
-										<div class="mb-1">
-											<span class="badge bg-light text-dark fs-6">
-												@product.Price.ToString("0.#####") ₽
-											</span>
-										</div>
-										@*<p class="card-text">@product.Category.Name</p>*@
-										<p class="fs-6 mb-4">@product.Name</p>
-										<div>
-											@if (User.Identity.IsAuthenticated)
+								<div class="mb-1">
+									<span class="badge bg-light text-dark fs-6">
+										@product.Price.ToString("0.#####") ₽
+									</span>
+								</div>
+								@*<p class="card-text">@product.Category.Name</p>*@
+								<p class="fs-6 mb-4">@product.Name</p>
+								<div>
+									@if (User.Identity.IsAuthenticated)
 									{
-												<div class="countItems countItems-@product.Id" data-id="@product.Id"></div>
-												<script type='text/javascript'>
-													GetCount('@product.Id');
-												</script>
+										<div class="countItems countItems-@product.Id" data-id="@product.Id"></div>
 									}
 									else
 									{
-												<input type="submit" class="btn btn-primary" value="В корзину" onclick="AddCartItem(this)">
+										<input type="submit" class="btn btn-primary" value="В корзину" onclick="AddCartItem(this)">
 									}
 
-										</div>
-
-										@if (User.IsInRole("admin"))
-								{
-											<div class="mt-3">
-												<div class="d-inline-block">
-													<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-outline-primary">Изменить</a>
-												</div>
-												<div class="d-inline-block">
-													<a asp-action="DeleteProduct" asp-route-id="@product.Id" class="btn btn-outline-danger">Удалить</a>
-												</div>
-											</div>
-								}
-									</div>
 								</div>
+
+								@if (User.IsInRole("admin"))
+								{
+									<div class="mt-3">
+										<div class="d-inline-block">
+											<a asp-action="SaveProduct" asp-route-id="@product.Id" class="btn btn-outline-primary">Изменить</a>
+										</div>
+										<div class="d-inline-block">
+											<a asp-action="DeleteProduct" asp-route-id="@product.Id" class="btn btn-outline-danger">Удалить</a>
+										</div>
+									</div>
+								}
 							</div>
+						</div>
+					</div>
 				}
 			}
 		</div>
@@ -109,7 +82,42 @@
 
 @section Scripts {
 
+
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 	<script>
+
+		$(function () {
+			$('.countItems').each(function () {
+				var id = $(this).attr('data-id');
+				GetCount(id);
+
+			});
+		});
+
+
+		function GetCount(productId) {
+			var id = productId;
+			var name = '.countItems-' + String(id);
+
+			$.ajax({
+				url: '/Cart/GetCartItemQuantityPartial',
+				type: 'GET',
+				data: {
+					'id': id
+				},
+				success: function (partialView) {
+					var count = name;
+					$(count).each(function () {
+						$(this).html(partialView);
+					});
+				}
+			});
+		}
+
+
 		function AddCartItem(form) {
 			$.ajax({
 				url: '/Account/Login',
@@ -120,9 +128,11 @@
 			});
 		}
 
-		$(function () {
+
+		jQuery.noConflict();
+		(function ($) {
 			$.ajaxSetup({ cache: false });
-			$(".ProductImg").click(function (e) {
+			$(".ProductImg").on('click', function (e) {
 				e.preventDefault();
 				var id = $(this).attr("data-id");
 				$.ajax({
@@ -138,7 +148,7 @@
 					}
 				});
 			});
-		});
+		})(jQuery);
 
 	</script>
 }

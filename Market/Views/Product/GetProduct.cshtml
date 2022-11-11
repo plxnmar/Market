@@ -1,6 +1,8 @@
 ﻿@model Market.Domain.Entity.Product
 
 
+
+
 <div class="modal-content">
 	<div class="modal-header">
 		@*<h5 class="modal-title" id="exampleModalLabel">Заголовок модального окна</h5>*@
@@ -24,12 +26,12 @@
 						<div class="mb-3 ms-3">
 							@if (User.Identity.IsAuthenticated)
 							{
-								<div class="countItems countItems-@Model.Id" data-id="@Model.Id"></div>
+								<div class="countItems countItems-@Model.Id" id="countItem" data-id="@Model.Id"></div>
+								@*
+							<script type='text/javascript'>
+							GetCount('@Model.Id');
+							</script>*@
 
-								<script type='text/javascript'>
-									GetCount('@Model.Id');
-								</script>
-						
 							}
 							else
 							{
@@ -66,55 +68,40 @@
 </div>
 
 
-@section Scripts
-{
-	
+
+
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
 
 
-	<script>
+<script>
+
+	var countItem = document.getElementById('countItem');
+	var id = countItem.getAttribute('data-id');
+	GetCount(id);
 
 
-		//$(".countItems").load(function () {
-		//	var myId = $(this).data("id");
-		//	console.log(myId);
-		//	//$('.myClass').attr('id', myId);
-		//});
+	function GetCount(productId) {
+		var id = productId;
+		var name = '.countItems-' + String(id);
+
+		$.ajax({
+			url: '/Cart/GetCartItemQuantityPartial',
+			type: 'GET',
+			data: {
+				'id': id
+			},
+			success: function (partialView) {
+				var count = name;
+				$(count).each(function () {
+					$(this).html(partialView);
+
+				});
+			}
+		});
+	}
 
 
-		//$(function () {
-		//var plant = document.getElementById('strawberry-plant');
-		//var fruitCount = plant.getAttribute('data-fruit'); // fruitCount = '12'
 
-			//console.log(1);
-			//var id = productId;
-			//var name = '#countItems-' + String(id);
-		
-			//$.ajax({
-			//	url: '/Cart/GetCartItemQuantityPartial',
-			//	type: 'GET',
-			//	data: {
-			//		'id': id
-			//	},
-			//	success: function (partialView) {
-			//		var count = name;
-			//		$(count).html(partialView);
-			//	}
-			//});
-		//});
+</script>
 
-
-		//function AddCartItem(form) {
-		//	$.ajax({
-		//		url: '/Account/Login',
-		//		type: 'GET',
-		//		success: function (result) {
-		//			window.location.href = '/Account/Login';
-		//		}
-		//	});
-		//}
-
-	</script>
-
-}

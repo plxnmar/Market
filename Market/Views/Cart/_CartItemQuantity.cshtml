@@ -6,29 +6,33 @@
 	if (Model != null)
 	{
 		<div class="d-inline-block">
-			<form asp-action="DeleteCartItem" asp-controller="Cart" asp-route-cartId="@Model.Id" asp-route-isDelete="false" method="post" data-ajax="true" data-id="@Model.Product.Id" data-ajax-success="GetCount('@Model.Product.Id')">
+			<form action="/" data-ajax="true" data-cartId="@Model.Id" data-productId="@Model.Product.Id" onsubmit="CartItemMinus(this)">
 				<input type="submit" class="btn btn-outline-primary" value="-">
 			</form>
 		</div>
 		<span><small class="text-muted">@Model.Count шт.</small></span>
 
 		<div class="d-inline-block">
-			<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@Model.Product.Id" method="post" data-ajax="true" data-id="@Model.Product.Id" data-ajax-success="GetCount('@Model.Product.Id')">
-				@if (Model.Count < 10)
-				{
+
+			@if (Model.Count < 10)
+			{
+				<form action="/" data-ajax="true" data-id="@Model.Product.Id"  onsubmit="CartItemPlus(this)">
 					<input type="submit" class="btn btn-outline-primary" value="+">
-				}
-				else
-				{
+				</form>
+			}
+			else
+			{
+				<form action="/" data-ajax="true" data-id="@Model.Product.Id" onsubmit="CartItemPlus(this)">
 					<input type="submit" class="btn btn-outline-primary" value="+" disabled>
-				}
-			</form>
+				</form>
+			}
+
 		</div>
 	}
 
 	else
 	{
-		<form asp-action="AddCartItem" asp-controller="Cart" asp-route-productId="@ViewBag.ProductId" method="post" data-ajax="true" data-id="@ViewBag.ProductId" data-ajax-success="GetCount('@ViewBag.ProductId')">
+		<form action="/" data-id="@ViewBag.ProductId" data-ajax="true"  onsubmit="CartItemPlus(this)">
 			@if (User.Identity.IsAuthenticated)
 			{
 				<input type="submit" class="btn btn-primary" value="В корзину">
@@ -39,6 +43,42 @@
 
 
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+<script>
 
+	function CartItemPlus(form) {
 
+		var productId = $(form).attr("data-id");
+
+		$.ajax({
+			url: '/Cart/AddCartItem',
+			type: 'POST',
+			data: {
+				'productId': productId,
+			},
+			success: function (data) {
+				GetCount(productId);
+			}
+		});
+	}
+
+	function CartItemMinus(form) {
+
+		var cartId = $(form).attr("data-cartId");
+		var productId = $(form).attr("data-productId");
+
+		$.ajax({
+			url: '/Cart/DeleteCartItem',
+			type: 'POST',
+			data: {
+				'cartId': cartId,
+				'isDelete': false
+			},
+			success: function (data) {
+				GetCount(productId);
+			}
+		});
+	}
+
+</script>

@@ -5,46 +5,49 @@
 	Layout = "_Layout";
 
 }
-@if(User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated)
 {
-<div class="mb-3">
-	<h3>Корзина</h3>
-</div>
+	<div class="mb-3">
+		<h3>Корзина</h3>
+	</div>
 
-<div class="row">
-	<div class="col-8">
-		<div id="CartItemList">
-			<partial name="_CartItemList" model="Model.CartItems" />
+	<div class="row">
+		<div class="col-8">
+			<div id="CartItemList">
+				<partial name="_CartItemList" model="Model.CartItems" />
+			</div>
+		</div>
+		<div class="col-4" id="TotalSumPartial">
+			<partial name="_CartTotalSum" model="@Model" />
 		</div>
 	</div>
-	<div class="col-4" id="TotalSumPartial">
-		<partial name="_CartTotalSum" model="@Model" />
+}
+else
+{
+	<div class="mb-3">
+		<h3>Войдите для просмотра корзины</h3>
+	</div>
+}
+
+<!-- Модальное окно -->
+<div class="modal fade" id="ProductModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" id="DataModal">
 	</div>
 </div>
-}
-else {
-<div class="mb-3">
-	<h3>Войдите для просмотра корзины</h3>
-</div>
-}
 
-
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>	
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 @section Scripts {
-	<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
-
+	
 	<script>
 		function deleteItem(form) {
 			$(form).parents('li').remove();
 		}
 
-		$(document).on('change', '.select_send_ajax', function () {
-			$(this).parents('form').submit();
-			console.log('изменение кол-ва товара');
-		});
 
-		function getTotalSumPartial(form) {
+		function getTotalSumPartial() {
 			$.ajax(
 				{
 					url: 'GetCartTotalPartial',
@@ -57,7 +60,54 @@ else {
 				});
 		}
 
+		//выпадающий список кол-ва товаров
+		$(document).on('change', '.select_send_ajax', function () {
+			$(this).parents('form').submit();
+		});
 
-		
+
+		var myModalEl = document.getElementById('ProductModal')
+		myModalEl.addEventListener('hidden.bs.modal', function (event) {
+			getCartItemListPartial();
+			getTotalSumPartial();
+		})
+
+
+		function getCartItemListPartial() {
+			$.ajax(
+				{
+					url: 'GetCartListPartial',
+					type: 'GET',
+
+					success: function (partialView) {
+						$('#CartItemList').html(partialView);
+						$('#CartItemList').show();
+					}
+				});
+		}
+
+
+		function ProductImgClick(img) {
+			$.ajaxSetup({ cache: false });
+			jQuery.noConflict();
+			(function ($) {	
+				var id = $(img).attr("data-id");
+				jQuery.ajax({
+					url: '/Product/GetProduct',
+					type: 'GET',
+					data: {
+						'id': id
+					},
+					success: function (data) {
+						$('#DataModal').html(data);
+						jQuery.noConflict();
+						jQuery('#ProductModal').modal('show');
+					}
+				});
+
+			})(jQuery);
+			return false;
+		}
+	
 	</script>
 }

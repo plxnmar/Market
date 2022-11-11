@@ -95,22 +95,9 @@
 	}*@
 
 
-	@section Scripts {
-		@*<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>*@
-
-		@*<script>
-	$(document).ready(function () {
-	(function () {
-	var url = $("#categories-view").data("url");
-	$("#categories-view").load(url);
-	})();
-	});
-	</script>*@
-	}
-
 
 		<script src="~/lib/jquery/dist/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jquery-ajax-unobtrusive@3.2.6/dist/jquery.unobtrusive-ajax.min.js"></script>
 		<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="~/js/site.js" asp-append-version="true"></script>
 		@await RenderSectionAsync("Scripts", required: false)

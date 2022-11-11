@@ -59,7 +59,7 @@ namespace Market.Controllers
             {
                 return PartialView("_CartTotalSum", response.Data);
             }
-            return NoContent();
+            return View("/Views/Error");
         }
 
         [HttpGet]
@@ -95,7 +95,7 @@ namespace Market.Controllers
                 ViewBag.ProductId = id;  
                 return PartialView("_CartItemQuantity", response.Data);
             }
-            return NoContent();
+            return View("/Views/Error");
         }
 
     }
