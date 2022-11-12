@@ -1,4 +1,5 @@
 ﻿using Market.DAL.Interfaces;
+using Market.DAL.Repositories;
 using Market.Domain.Entity;
 using Market.Domain.Enum;
 using Market.Domain.Helpers;
@@ -38,7 +39,7 @@ namespace Market.Service.Implementatins
                 if (user == null)
                     return new BaseResponse<ClaimsIdentity>()
                     {
-                        Desciption = "Пользователь не найден",
+                        Description = "Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound
                     };
 
@@ -46,7 +47,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<ClaimsIdentity>()
                     {
-                        Desciption = "Неверный логин или пароль",
+                        Description = "Неверный логин или пароль",
                     };
                 }
 
@@ -55,7 +56,7 @@ namespace Market.Service.Implementatins
                 return new BaseResponse<ClaimsIdentity>()
                 {
                     Data = id,
-                    Desciption = "Пользователь найден",
+                    Description = "Пользователь найден",
                     StatusCode = StatusCode.OK
                 };
             }
@@ -76,29 +77,39 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<ClaimsIdentity>()
                     {
-                        Desciption = "Пользователь с таким логином уже существует"
+                        Description = "Пользователь с таким логином уже существует"
                     };
                 }
+
+                var cart = new Cart() { };
 
                 user = new User()
                 {
                     Name = registerViewModel.Name,
-                    Password =  HashPasswordHelper.GetHashPassword(registerViewModel.Password),
+                    Password = HashPasswordHelper.GetHashPassword(registerViewModel.Password),
+                    Cart = cart
                 };
+
 
                 var userRole = await roleRepository.GetAll().FirstOrDefaultAsync(x => x.Name == "user");
 
                 if (userRole != null)
                     user.Role = userRole;
 
+
+
                 await userRepository.Create(user);
+
+                user.Cart.UserId = user.Id;
+                await userRepository.Update(user);
+
 
                 var id = Authenticate(user);
 
                 return new BaseResponse<ClaimsIdentity>()
                 {
                     Data = id,
-                    Desciption = "Пользователь добавлен",
+                    Description = "Пользователь добавлен",
                     StatusCode = StatusCode.OK
                 };
 

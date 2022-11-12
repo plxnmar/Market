@@ -31,7 +31,7 @@ namespace Market.Service.Implementatins
 
                 if (product == null)
                 {
-                    baseResponse.Desciption = "Продукт не найден";
+                    baseResponse.Description = "Продукт не найден";
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
                 }
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
@@ -49,7 +49,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetProduct] : {ex.Message}";
+                baseResponse.Description = $"[GetProduct] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
@@ -64,7 +64,7 @@ namespace Market.Service.Implementatins
 
                 if (product == null)
                 {
-                    baseResponse.Desciption = "Продукт не найден";
+                    baseResponse.Description = "Продукт не найден";
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
                 }
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
@@ -72,7 +72,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetProduct] : {ex.Message}";
+                baseResponse.Description = $"[GetProduct] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
@@ -86,7 +86,7 @@ namespace Market.Service.Implementatins
                 var products = productRepository.GetAll();
                 if (products.Count() == 0)
                 {
-                    baseResponse.Desciption = "[GetProducts] : Найдено 0 элементов";
+                    baseResponse.Description = "[GetProducts] : Найдено 0 элементов";
                 }
 
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
@@ -95,7 +95,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetProducts] : {ex.Message}";
+                baseResponse.Description = $"[GetProducts] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
 
@@ -111,7 +111,7 @@ namespace Market.Service.Implementatins
                 var products = productRepository.GetAll().Where(x => x.CategoryId == id);
                 if (products.Count() == 0)
                 {
-                    baseResponse.Desciption = "[GetCategoryProducts] : Найдено 0 элементов";
+                    baseResponse.Description = "[GetCategoryProducts] : Найдено 0 элементов";
                 }
 
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
@@ -120,7 +120,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetCategoryProducts] : {ex.Message}";
+                baseResponse.Description = $"[GetCategoryProducts] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
@@ -138,7 +138,7 @@ namespace Market.Service.Implementatins
 
                 if (product == null)
                 {
-                    baseResponse.Desciption = "Продукт не найден";
+                    baseResponse.Description = "Продукт не найден";
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
                 }
 
@@ -151,7 +151,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[DeleteProduct] : {ex.Message}";
+                baseResponse.Description = $"[DeleteProduct] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
@@ -177,7 +177,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[CreateProduct] : {ex.Message}";
+                baseResponse.Description = $"[CreateProduct] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
@@ -192,7 +192,7 @@ namespace Market.Service.Implementatins
                 if (product == null)
                 {
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
-                    baseResponse.Desciption = "Продукт не найден";
+                    baseResponse.Description = "Продукт не найден";
                     return baseResponse;
                 }
 
@@ -214,7 +214,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[EditProduct] : {ex.Message}";
+                baseResponse.Description = $"[EditProduct] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;

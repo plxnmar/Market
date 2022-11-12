@@ -50,7 +50,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<IEnumerable<Order>>()
                     {
-                        Desciption = "[GetCartItems] : Пользователь не найден",
+                        Description = "[GetCartItems] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
                 }
@@ -61,7 +61,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetCartItems] : {ex.Message}";
+                baseResponse.Description = $"[GetCartItems] : {ex.Message}";
                 baseResponse.StatusCode = StatusCode.InternalServerError;
             }
 
@@ -80,7 +80,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<OrderViewModel>()
                     {
-                        Desciption = "[AddOrder] : Пользователь не найден",
+                        Description = "[AddOrder] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
                 }
@@ -101,7 +101,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[AddOrder] : {ex.Message}";
+                baseResponse.Description = $"[AddOrder] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
@@ -119,7 +119,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<bool>()
                     {
-                        Desciption = "[AddOrder] : Пользователь не найден",
+                        Description = "[AddOrder] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
                 }
@@ -161,7 +161,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[AddOrder] : {ex.Message}";
+                baseResponse.Description = $"[AddOrder] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
@@ -199,146 +199,5 @@ namespace Market.Service.Implementatins
             order.OrderItems = orderItems;
             return orderItems;
         }
-
-        //public async Task<IBaseResponse<CartViewModel>> GetOrder(string userName, int id)
-        //{
-        //    var baseResponse = new BaseResponse<CartViewModel>();
-        //    try
-        //    {
-        //        var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
-
-        //        if (user == null)
-        //        {
-        //            return new BaseResponse<CartViewModel>()
-        //            {
-        //                Desciption = "[GetCartItems] : Пользователь не найден",
-        //                StatusCode = StatusCode.UserNotFound,
-        //            };
-        //        }
-
-        //        if (user.Cart == null)
-        //        {
-        //            var cart = await cartRepository.Create(new Cart() { User = user, CartItems = new List<CartItem>() });
-        //        }
-
-        //        var cartItems = user.Cart.CartItems.ToList();
-
-        //        var viewModel = new CartViewModel
-        //        {
-        //            CartItems = cartItems,
-        //            CartTotalSum = GetTotal(cartItems),
-        //            CartItemsCount = GetCount(cartItems)
-        //        };
-
-
-        //        baseResponse.StatusCode = StatusCode.OK;
-        //        baseResponse.Data = viewModel;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        baseResponse.Desciption = $"[GetCartItems] : {ex.Message}";
-        //        baseResponse.StatusCode = StatusCode.InternalServerError;
-        //    }
-
-        //    return baseResponse;
-        //}
-
-        //public async Task<IBaseResponse<CartItem>> GetCartItem(string userName, int productId)
-        //{
-        //    var baseResponse = new BaseResponse<CartItem>();
-        //    try
-        //    {
-        //        var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
-
-        //        if (user == null)
-        //        {
-        //            return new BaseResponse<CartItem>()
-        //            {
-        //                Desciption = "[GetCartItems] : Пользователь не найден",
-        //                StatusCode = StatusCode.UserNotFound,
-        //            };
-        //        }
-
-        //        if (user.Cart == null)
-        //        {
-        //            var cart = await cartRepository.Create(new Cart() { User = user, CartItems = new List<CartItem>() });
-        //        }
-
-        //        //var cartItem = user.Cart.CartItems.FirstOrDefault(x => x.Product.Id == productId);
-        //        var cartItem = await cartItemRepository.GetAll().FirstOrDefaultAsync(x => x.ProductId == productId && x.Cart.UserId == user.Id);
-
-
-        //        baseResponse.StatusCode = StatusCode.OK;
-        //        baseResponse.Data = cartItem;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        baseResponse.Desciption = $"[GetCartItems] : {ex.Message}";
-        //        baseResponse.StatusCode = StatusCode.InternalServerError;
-        //    }
-
-        //    return baseResponse;
-        //}
-
-        //public async Task<IBaseResponse<CartViewModel>> DeleteCartItem(string userName, int cartItemId, bool isFullDelete)
-        //{
-        //    var baseResponse = new BaseResponse<CartViewModel>();
-        //    try
-        //    {
-        //        var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
-
-        //        if (user == null)
-        //        {
-        //            return new BaseResponse<CartViewModel>()
-        //            {
-        //                Desciption = "[DeleteCartItem] : Пользователь не найден",
-        //                StatusCode = StatusCode.UserNotFound,
-        //            };
-        //        }
-
-        //        var cartItem = await cartItemRepository.GetAll().FirstOrDefaultAsync(x => x.Id == cartItemId);
-
-        //        if (cartItem == null)
-        //        {
-        //            return new BaseResponse<CartViewModel>()
-        //            {
-        //                Desciption = "[DeleteCartItem] : Товар в корзине не найден",
-        //                //  StatusCode = StatusCode.UserNotFound,
-        //            };
-        //        }
-
-        //        if (isFullDelete || cartItem.Count == 1)
-        //        {
-        //            var result = await cartItemRepository.Remove(cartItem);
-        //        }
-        //        else
-        //        {
-        //            cartItem.Count--;
-        //            var result = await cartItemRepository.Update(cartItem);
-        //        }
-
-
-        //        baseResponse.StatusCode = StatusCode.OK;
-
-        //        var cartItems = user.Cart.CartItems.ToList();
-
-        //        var viewModel = new CartViewModel
-        //        {
-        //            CartItems = cartItems,
-        //            CartTotalSum = GetTotal(cartItems),
-        //            CartItemsCount = GetCount(cartItems)
-        //        };
-
-        //        baseResponse.Data = viewModel;
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        baseResponse.Desciption = $"[DeleteCartItem] : {ex.Message}";
-        //        baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
-        //    }
-        //    return baseResponse;
-        //}
-
     }
 }

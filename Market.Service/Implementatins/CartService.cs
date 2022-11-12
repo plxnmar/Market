@@ -44,10 +44,11 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<CartItem>()
                     {
-                        Desciption = "[AddCartItem] : Пользователь не найден",
+                        Description = "[AddCartItem] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
                 }
+
 
                 var product = await productRepository.Get(productId);
 
@@ -55,7 +56,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<CartItem>()
                     {
-                        Desciption = "[AddCartItem] : Продукт не найден",
+                        Description = "[AddCartItem] : Продукт не найден",
                         //StatusCode = StatusCode.UserNotFound,
                     };
                 }
@@ -94,7 +95,7 @@ namespace Market.Service.Implementatins
             {
                 return new BaseResponse<CartItem>()
                 {
-                    Desciption = $"[AddCartItem] : {ex.Message}",
+                    Description = $"[AddCartItem] : {ex.Message}",
                     StatusCode = Domain.Enum.StatusCode.InternalServerError,
                 };
 
@@ -112,7 +113,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<CartViewModel>()
                     {
-                        Desciption = "[GetCartItems] : Пользователь не найден",
+                        Description = "[GetCartItems] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
                 }
@@ -137,7 +138,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetCartItems] : {ex.Message}";
+                baseResponse.Description = $"[GetCartItems] : {ex.Message}";
                 baseResponse.StatusCode = StatusCode.InternalServerError;
             }
 
@@ -155,7 +156,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<CartItem>()
                     {
-                        Desciption = "[GetCartItems] : Пользователь не найден",
+                        Description = "[GetCartItems] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
                 }
@@ -174,7 +175,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetCartItems] : {ex.Message}";
+                baseResponse.Description = $"[GetCartItems] : {ex.Message}";
                 baseResponse.StatusCode = StatusCode.InternalServerError;
             }
 
@@ -192,7 +193,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<CartViewModel>()
                     {
-                        Desciption = "[DeleteCartItem] : Пользователь не найден",
+                        Description = "[DeleteCartItem] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
                 }
@@ -203,7 +204,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<CartViewModel>()
                     {
-                        Desciption = "[DeleteCartItem] : Товар в корзине не найден",
+                        Description = "[DeleteCartItem] : Товар в корзине не найден",
                         //  StatusCode = StatusCode.UserNotFound,
                     };
                 }
@@ -235,7 +236,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[DeleteCartItem] : {ex.Message}";
+                baseResponse.Description = $"[DeleteCartItem] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
@@ -262,7 +263,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<IEnumerable<CartItem>>()
                     {
-                        Desciption = "[UpdateCartItem] : Пользователь не найден",
+                        Description = "[UpdateCartItem] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
                 }
@@ -283,7 +284,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[UpdateCartItem] : {ex.Message}";
+                baseResponse.Description = $"[UpdateCartItem] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;

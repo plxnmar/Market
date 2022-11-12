@@ -75,11 +75,6 @@ namespace Market.DAL
             .WithOne(a => a.Cart)
             .HasForeignKey<User>(c => c.CartId);
 
-            //modelBuilder.Entity<Product>().HasData(
-            //        new Product { Id = 1, Name = "Банан", Description = "111", Price = 111 }
-            //new Product { Id = 2, Name = "Булочка с корицей" },
-            //new Product { Id = 3, Name = "Морковка" }
-            //);
         }
 
     }

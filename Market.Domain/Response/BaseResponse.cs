@@ -5,7 +5,7 @@ namespace Market.Domain.Response
     public class BaseResponse<T> : IBaseResponse<T>
     {
         //описание ошибки/предупреждения
-        public string Desciption { get; set; }
+        public string Description { get; set; }
 
         public StatusCode StatusCode { get; set; }
 

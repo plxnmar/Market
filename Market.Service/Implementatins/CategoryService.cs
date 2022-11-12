@@ -29,14 +29,14 @@ namespace Market.Service.Implementatins
                 var categories = baseRepository.GetAll();
                 if (categories.Count() == 0)
                 {
-                    baseResponse.Desciption = "[GetCategories] : Найдено 0 элементов";
+                    baseResponse.Description = "[GetCategories] : Найдено 0 элементов";
                 }
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
                 baseResponse.Data = categories;
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetCategories] : {ex.Message}";
+                baseResponse.Description = $"[GetCategories] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
 
@@ -52,7 +52,7 @@ namespace Market.Service.Implementatins
 
                 if (product == null)
                 {
-                    baseResponse.Desciption = "Категория не найдена";
+                    baseResponse.Description = "Категория не найдена";
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
                 }
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
@@ -61,7 +61,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetCategory] : {ex.Message}";
+                baseResponse.Description = $"[GetCategory] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
 
@@ -77,7 +77,7 @@ namespace Market.Service.Implementatins
 
                 if (product == null)
                 {
-                    baseResponse.Desciption = "Категория не найдена";
+                    baseResponse.Description = "Категория не найдена";
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
                 }
                 baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
@@ -86,7 +86,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Desciption = $"[GetCategory] : {ex.Message}";
+                baseResponse.Description = $"[GetCategory] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
 
