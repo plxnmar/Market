@@ -60,16 +60,18 @@ namespace Market.Service.Implementatins
                     StatusCode = StatusCode.OK
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return new BaseResponse<ClaimsIdentity>()
+                {
+                    Description = $"[Login] : {ex.Message}",
+                    StatusCode = StatusCode.InternalServerError
+                };
             }
         }
 
         public async Task<IBaseResponse<ClaimsIdentity>> Register(RegisterViewModel registerViewModel)
         {
-
             try
             {
                 var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == registerViewModel.Name);
@@ -96,8 +98,6 @@ namespace Market.Service.Implementatins
                 if (userRole != null)
                     user.Role = userRole;
 
-
-
                 await userRepository.Create(user);
 
                 user.Cart.UserId = user.Id;
@@ -114,10 +114,13 @@ namespace Market.Service.Implementatins
                 };
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                return new BaseResponse<ClaimsIdentity>()
+                {
+                    Description = $"[Register] : {ex.Message}",
+                    StatusCode = StatusCode.InternalServerError
+                };
             }
         }
 

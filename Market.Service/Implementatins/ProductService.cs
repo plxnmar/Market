@@ -24,58 +24,43 @@ namespace Market.Service.Implementatins
 
         public async Task<IBaseResponse<ProductViewModel>> GetProductViewModel(int id)
         {
-            var baseResponse = new BaseResponse<ProductViewModel>();
             try
             {
                 var product = await productRepository.Get(id);
 
                 if (product == null)
                 {
-                    baseResponse.Description = "Продукт не найден";
-                    baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
+                    return new BaseResponse<ProductViewModel>()
+                    {
+                        Description = "[GetProductViewModel]: Продукт не найден",
+                        StatusCode = Domain.Enum.StatusCode.ProductNotFound,
+                    };
                 }
-                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
 
-                baseResponse.Data = new ProductViewModel()
+                return new BaseResponse<ProductViewModel>()
                 {
-                    Name = product.Name,
-                    Description = product.Description,
-                    Price = product.Price,
-                    Category = product.Category,
-                    CategoryId = product.Category.Id,
-                    ImgPath = product.ImgPath,
-                    Id = product.Id,   
+                    Description = "[GetProductViewModel]: ProductViewModel создана",
+                    StatusCode = Domain.Enum.StatusCode.OK,
+                    Data = new ProductViewModel()
+                    {
+                        Name = product.Name,
+                        Description = product.Description,
+                        Price = product.Price,
+                        Category = product.Category,
+                        CategoryId = product.Category.Id,
+                        ImgPath = product.ImgPath,
+                        Id = product.Id,
+                    },
                 };
             }
             catch (Exception ex)
             {
-                baseResponse.Description = $"[GetProduct] : {ex.Message}";
-                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
-            }
-            return baseResponse;
-        }
-
-        public async Task<IBaseResponse<Product>> GetProduct(int id)
-        {
-            var baseResponse = new BaseResponse<Product>();
-            try
-            {
-                var product = await productRepository.Get(id);
-
-                if (product == null)
+                return new BaseResponse<ProductViewModel>()
                 {
-                    baseResponse.Description = "Продукт не найден";
-                    baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
-                }
-                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
-                baseResponse.Data = product;
+                    Description = $"[GetProductViewModel] : {ex.Message}",
+                    StatusCode = Domain.Enum.StatusCode.InternalServerError,
+                };
             }
-            catch (Exception ex)
-            {
-                baseResponse.Description = $"[GetProduct] : {ex.Message}";
-                baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
-            }
-            return baseResponse;
         }
 
         public async Task<IBaseResponse<IEnumerable<Product>>> GetProducts()
@@ -127,27 +112,33 @@ namespace Market.Service.Implementatins
         }
 
 
-        public async Task<IBaseResponse<Product>> DeleteProduct(int id)
+        public async Task<IBaseResponse<Product>> DeleteProduct(int id, string webRootPath)
         {
             var baseResponse = new BaseResponse<Product>();
             try
             {
                 var product = await productRepository.Get(id);
-                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
-                baseResponse.Data = product;
+
 
                 if (product == null)
                 {
-                    baseResponse.Description = "Продукт не найден";
-                    baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
+                    return new BaseResponse<Product>()
+                    {
+                        Description = "[DeleteProduct]: Продукт не найден",
+                        StatusCode = Domain.Enum.StatusCode.ProductNotFound,
+                    };
                 }
 
-
-
-                //string imageFilePath = Server.MapPath(@"~/uploaded/imagefilename.extension");
-                //System.IO.File.Delete("imageFilePath");
-
+                await DeleteImage(product.ImgPath, webRootPath);
                 await productRepository.Remove(product);
+
+
+                return new BaseResponse<Product>()
+                {
+                    Description = "[DeleteProduct]: Товар удален",
+                    StatusCode = Domain.Enum.StatusCode.OK,
+                    Data = product,
+                };
             }
             catch (Exception ex)
             {
@@ -157,33 +148,40 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
-        public async Task<IBaseResponse<bool>> AddProduct(ProductViewModel productViewModel)
+        public async Task<IBaseResponse<bool>> AddProduct(ProductViewModel model, string webRootPath)
         {
             var baseResponse = new BaseResponse<bool>();
             try
             {
+                if (model.UploadedImage != null)
+                {
+                    await SaveImage(model, webRootPath);
+                }
+
                 var product = new Product()
                 {
-                    Description = productViewModel.Description,
-                    Category = productViewModel.Category,
-                    CategoryId = productViewModel.Category.Id,
-                    ImgPath = productViewModel.ImgPath,
-                    Price = productViewModel.Price,
-                    Name = productViewModel.Name
+                    Description = model.Description,
+                    Category = model.Category,
+                    CategoryId = model.Category.Id,
+                    ImgPath = model.ImgPath,
+                    Price = model.Price,
+                    Name = model.Name
                 };
 
+   
                 await productRepository.Create(product);
-
+                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
+                baseResponse.Description = "[AddProduct]: Товар добавлен";
             }
             catch (Exception ex)
             {
-                baseResponse.Description = $"[CreateProduct] : {ex.Message}";
+                baseResponse.Description = $"[AddProduct] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
         }
 
-        public async Task<IBaseResponse<Product>> EditProduct(int id, ProductViewModel model)
+        public async Task<IBaseResponse<Product>> EditProduct(int id, ProductViewModel model, string webRootPath)
         {
             var baseResponse = new BaseResponse<Product>();
             try
@@ -192,8 +190,19 @@ namespace Market.Service.Implementatins
                 if (product == null)
                 {
                     baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
-                    baseResponse.Description = "Продукт не найден";
+                    baseResponse.Description = "[EditProduct]: Продукт не найден";
                     return baseResponse;
+                }
+
+                //удаление старого изображения товара и сохранение нового
+                //установка нового пути изображения
+                if (model.UploadedImage != null)
+                {
+                    if (product.ImgPath != null && product.ImgPath != "")
+                    {
+                        await DeleteImage(product.ImgPath, webRootPath);
+                    }
+                    await SaveImage(model, webRootPath);
                 }
 
                 product.Description = model.Description;
@@ -210,6 +219,9 @@ namespace Market.Service.Implementatins
                 product.CategoryId = model.Category.Id;
 
                 await productRepository.Update(product);
+
+                baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
+                baseResponse.Description = "[EditProduct]: Товар изменен";
                 return baseResponse;
             }
             catch (Exception ex)
@@ -221,29 +233,44 @@ namespace Market.Service.Implementatins
         }
 
 
-        //public async Task<IBaseResponse<IFormFile>> GetFile(int id)
-        //{
-        //    var baseResponse = new BaseResponse<IFormFile>();
-        //    try
-        //    {
-        //        var product = await productRepository.Get(id);
+        private async Task<bool> SaveImage(ProductViewModel model, string webRootPath)
+        {
+            //удаление старого изображения 
+         //   DeleteImage(model.ImgPath, webRootPath);
 
-        //        if (product == null)
-        //        {
-        //            baseResponse.Desciption = "Продукт не найден";
-        //            baseResponse.StatusCode = Domain.Enum.StatusCode.ProductNotFound;
-        //        }
-        //        baseResponse.StatusCode = Domain.Enum.StatusCode.OK;
-        //        baseResponse.Data = product;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        baseResponse.Desciption = $"[GetProduct] : {ex.Message}";
-        //        baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
-        //    }
-        //    return baseResponse;
-        //}
+            // путь к папке img в root
+            string path = "/img/" + model.UploadedImage.FileName;
 
+            // сохраняем файл в папку img в каталоге wwwroot
+            using (var fileStream = new FileStream(webRootPath + path, FileMode.Create))
+            {
+                await model.UploadedImage.CopyToAsync(fileStream);
+                model.ImgPath = path;
+                return true;
+            }
+            return false;
+        }
+
+        private async Task<bool> DeleteImage(string path, string webRootPath)
+        {
+            var fullPath = webRootPath + path;
+
+            try
+            {
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+
+            return false;
+        }
 
     }
 }

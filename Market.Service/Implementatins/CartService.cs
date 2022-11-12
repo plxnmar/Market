@@ -35,7 +35,6 @@ namespace Market.Service.Implementatins
 
         public async Task<IBaseResponse<CartItem>> AddCartItem(string userName, int productId)
         {
-            //var baseResponse = new BaseResponse<CartItem>();
             try
             {
                 var user = await userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
@@ -57,7 +56,6 @@ namespace Market.Service.Implementatins
                     return new BaseResponse<CartItem>()
                     {
                         Description = "[AddCartItem] : Продукт не найден",
-                        //StatusCode = StatusCode.UserNotFound,
                     };
                 }
 
@@ -85,11 +83,9 @@ namespace Market.Service.Implementatins
                 return new BaseResponse<CartItem>()
                 {
                     StatusCode = StatusCode.OK,
-                    //  baseResponse.Data = user.Cart.CartItems;
+                    Description = "[AddCartItem] : Товар добавлен в корзину",
                     Data = cartItem,
                 };
-
-
             }
             catch (Exception ex)
             {
@@ -166,8 +162,8 @@ namespace Market.Service.Implementatins
                     var cart = await cartRepository.Create(new Cart() { User = user, CartItems = new List<CartItem>() });
                 }
 
-                //var cartItem = user.Cart.CartItems.FirstOrDefault(x => x.Product.Id == productId);
-                var cartItem = await cartItemRepository.GetAll().FirstOrDefaultAsync(x => x.ProductId == productId && x.Cart.UserId == user.Id);
+                var cartItem = await cartItemRepository.GetAll()
+                    .FirstOrDefaultAsync(x => x.ProductId == productId && x.Cart.UserId == user.Id);
 
 
                 baseResponse.StatusCode = StatusCode.OK;
@@ -175,7 +171,7 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Description = $"[GetCartItems] : {ex.Message}";
+                baseResponse.Description = $"[GetCartItem] : {ex.Message}";
                 baseResponse.StatusCode = StatusCode.InternalServerError;
             }
 
@@ -205,7 +201,6 @@ namespace Market.Service.Implementatins
                     return new BaseResponse<CartViewModel>()
                     {
                         Description = "[DeleteCartItem] : Товар в корзине не найден",
-                        //  StatusCode = StatusCode.UserNotFound,
                     };
                 }
 
@@ -219,9 +214,7 @@ namespace Market.Service.Implementatins
                     var result = await cartItemRepository.Update(cartItem);
                 }
 
-
                 baseResponse.StatusCode = StatusCode.OK;
-
                 var cartItems = user.Cart.CartItems.ToList();
 
                 var viewModel = new CartViewModel
@@ -240,16 +233,6 @@ namespace Market.Service.Implementatins
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
-        }
-
-        private decimal GetTotal(IEnumerable<CartItem> cartItems)
-        {
-            return cartItems.Sum(x => x.Product.Price * x.Count);
-        }
-
-        private int GetCount(IEnumerable<CartItem> cartItems)
-        {
-            return cartItems.Sum(x => x.Count);
         }
 
         public async Task<IBaseResponse<IEnumerable<CartItem>>> UpdateCartItem(string userName, int cartItemId, int quantity)
@@ -290,6 +273,15 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
+        private decimal GetTotal(IEnumerable<CartItem> cartItems)
+        {
+            return cartItems.Sum(x => x.Product.Price * x.Count);
+        }
+
+        private int GetCount(IEnumerable<CartItem> cartItems)
+        {
+            return cartItems.Sum(x => x.Count);
+        }
 
     }
 }

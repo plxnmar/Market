@@ -20,23 +20,16 @@ namespace Market.Service.Implementatins
 {
     public class OrderService : IOrderService
     {
-        private readonly IBaseRepository<CartItem> cartItemRepository;
         private readonly IBaseRepository<User> userRepository;
         private readonly IBaseRepository<Product> productRepository;
-        private readonly IBaseRepository<Cart> cartRepository;
         private readonly IBaseRepository<Order> orderRepository;
-        private readonly IBaseRepository<OrderItem> orderItemRepository;
 
-        public OrderService(IBaseRepository<CartItem> cartItemRepository, IBaseRepository<Product> productRepository,
-            IBaseRepository<User> userRepository, IBaseRepository<Cart> cartRepository, IBaseRepository<Order> orderRepository,
-            IBaseRepository<OrderItem> orderItemRepository)
+        public OrderService(IBaseRepository<Product> productRepository,
+            IBaseRepository<User> userRepository, IBaseRepository<Order> orderRepository)
         {
-            this.cartItemRepository = cartItemRepository;
             this.userRepository = userRepository;
             this.productRepository = productRepository;
-            this.cartRepository = cartRepository;
             this.orderRepository = orderRepository;
-            this.orderItemRepository = orderItemRepository;
         }
 
         public async Task<IBaseResponse<IEnumerable<Order>>> GetOrders(string userName)
@@ -50,7 +43,7 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<IEnumerable<Order>>()
                     {
-                        Description = "[GetCartItems] : Пользователь не найден",
+                        Description = "[GetOrders] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
                 }
@@ -61,13 +54,12 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Description = $"[GetCartItems] : {ex.Message}";
+                baseResponse.Description = $"[GetOrders] : {ex.Message}";
                 baseResponse.StatusCode = StatusCode.InternalServerError;
             }
 
             return baseResponse;
         }
-
 
         public async Task<IBaseResponse<OrderViewModel>> CreateOrderViewModel(string userName)
         {
@@ -80,13 +72,30 @@ namespace Market.Service.Implementatins
                 {
                     return new BaseResponse<OrderViewModel>()
                     {
-                        Description = "[AddOrder] : Пользователь не найден",
+                        Description = "[CreateOrderViewModel] : Пользователь не найден",
                         StatusCode = StatusCode.UserNotFound,
                     };
                 }
 
                 var order = new Order() { UserId = user.Id };
-                var orderItems = CreateOrderItems(user, order);
+
+
+                var orderItems = new List<OrderItem>();
+                var cartItems = user.Cart.CartItems;
+
+                foreach (var cartItem in cartItems)
+                {
+                    orderItems.Add(
+                        new OrderItem()
+                        {
+                            Product = cartItem.Product,
+                            ProductId = cartItem.ProductId,
+                            Price = cartItem.Product.Price,
+                            Quantity = cartItem.Count,
+                        });
+                }
+
+                order.OrderItems = orderItems;
 
                 var orderViewModel = new OrderViewModel()
                 {
@@ -101,12 +110,11 @@ namespace Market.Service.Implementatins
             }
             catch (Exception ex)
             {
-                baseResponse.Description = $"[AddOrder] : {ex.Message}";
+                baseResponse.Description = $"[CreateOrderViewModel] : {ex.Message}";
                 baseResponse.StatusCode = Domain.Enum.StatusCode.InternalServerError;
             }
             return baseResponse;
         }
-
 
         public async Task<IBaseResponse<bool>> AddOrder(string userName, OrderViewModel orderViewModel)
         {
@@ -132,7 +140,6 @@ namespace Market.Service.Implementatins
                     Address = orderViewModel.Address,
                     FirstName = orderViewModel.FirstName,
                     LastName = orderViewModel.LastName,
-                    //  OrderItems = orderViewModel.OrderItems,
                     Total = orderViewModel.Total,
                     User = user,
                 };
@@ -167,7 +174,6 @@ namespace Market.Service.Implementatins
             return baseResponse;
         }
 
-
         private decimal GetTotal(IEnumerable<OrderItem> orderItems)
         {
             return orderItems.Sum(x => x.Price * x.Quantity);
@@ -178,26 +184,6 @@ namespace Market.Service.Implementatins
             return orderItems.Sum(x => x.Quantity);
         }
 
-
-        private static List<OrderItem> CreateOrderItems(User? user, Order order)
-        {
-            var orderItems = new List<OrderItem>();
-            var cartItems = user.Cart.CartItems;
-
-            foreach (var cartItem in cartItems)
-            {
-                orderItems.Add(
-                    new OrderItem()
-                    {
-                        Product = cartItem.Product,
-                        ProductId = cartItem.ProductId,
-                        Price = cartItem.Product.Price,
-                        Quantity = cartItem.Count,
-                    });
-            }
-
-            order.OrderItems = orderItems;
-            return orderItems;
-        }
+    
     }
 }

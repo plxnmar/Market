@@ -1,4 +1,4 @@
-﻿@model Market.Domain.Entity.Product
+﻿@model Market.Domain.ViewModels.Product.ProductViewModel
 
 
 
@@ -39,13 +39,6 @@
 							}
 						</div>
 					</div>
-
-					@if (User.IsInRole("admin"))
-					{
-						<div class="col-12">
-							<a asp-action="DeleteProduct" asp-route-id="@Model?.Id" class="btn btn-danger">Удалить</a>
-						</div>
-					}
 				</div>
 			</div>
 

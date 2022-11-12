@@ -17,7 +17,7 @@ namespace Market.Domain.Response
     {
         //код ошибки
         public StatusCode StatusCode { get; set; }
-
+        public string Description { get; set; }
         public T Data { get; set; }
     }
 }

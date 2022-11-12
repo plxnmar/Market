@@ -18,20 +18,12 @@ namespace Market.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly IProductService productService;
         private readonly IOrderService orderService;
-        private readonly ICartService cartService;
-        IWebHostEnvironment _appEnvironment;
 
-        public OrderController(IProductService productService, IOrderService orderService,
-             IWebHostEnvironment appEnvironment, ICartService cartService)
+        public OrderController(IOrderService orderService)
         {
-            this.productService = productService;
             this.orderService = orderService;
-            this.cartService = cartService;
-            _appEnvironment = appEnvironment;
         }
-
 
 
         [HttpGet]
@@ -41,10 +33,9 @@ namespace Market.Controllers
 
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                //ViewBag.Categories = response.Data;
                 return View(response.Data);
             }
-            return RedirectToAction("Error");
+            return View("Error", $"{response.Description}");
         }
 
         [HttpGet]
@@ -56,7 +47,7 @@ namespace Market.Controllers
             {
                 return View(response.Data);
             }
-            return RedirectToAction("Error");
+            return View("Error", $"{response.Description}");
         }
 
 
@@ -66,9 +57,8 @@ namespace Market.Controllers
             //для отмены валидации списка
             for (int i = 0; i < orderViewModel.OrderItems.Count; i++)
             {
-                var a = ModelState.Remove("OrderItems[" + i + "].Order");
+                ModelState.Remove("OrderItems[" + i + "].Order");
             }
-
 
             if (ModelState.IsValid)
             {
@@ -76,13 +66,10 @@ namespace Market.Controllers
 
                 if (response.StatusCode == Domain.Enum.StatusCode.OK)
                 {
-                    //return View(response.Data);
-                    //  return RedirectToAction("GetCart", "Cart");
                     return View(orderViewModel);
                 }
             }
             return View(orderViewModel);
         }
-
     }
 }
