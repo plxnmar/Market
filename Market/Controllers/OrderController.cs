@@ -16,6 +16,7 @@ using System.IO;
 
 namespace Market.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IOrderService orderService;
