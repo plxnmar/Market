@@ -18,16 +18,11 @@ namespace Market.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        public IActionResult Login() => View();
+
 
         [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
 
         [Authorize]
@@ -51,9 +46,13 @@ namespace Market.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
+                else
+                {
+                    ModelState.AddModelError("", response.Description);
+                }
             }
 
-            return View();
+            return View(loginViewModel);
         }
 
         [HttpPost]

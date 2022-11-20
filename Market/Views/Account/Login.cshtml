@@ -3,21 +3,24 @@
 @{
 	ViewData["Title"] = "Вход";
 }
+
 <div class="row justify-content-center">
 	<div class="col-4">
 		<form method="post" asp-controller="Account" asp-action="Login">
+
 			<div>
 				<h4 class="text-center">Войдите, пожалуйста</h4>
 			</div>
+			<div asp-validation-summary="ModelOnly" class="text-danger text-center " id="modelValid"></div>
 			<div class="mb-3">
 				<label for="Name" class="form-label">Логин</label>
 				<input asp-for="Name" type="text" class="form-control" id="name" aria-describedby="emailHelp">
-				<span asp-validation-for="Name" class="text-danger"></span>
+				<span asp-validation-for="Name" class="text-danger" id="nameValid"></span>
 			</div>
 			<div class="mb-3">
-				<label for="Password" class="form-label" >Пароль</label>
+				<label for="Password" class="form-label">Пароль</label>
 				<input asp-for="Password" type="password" class="form-control" id="password">
-				<span asp-validation-for="Password" class="text-danger"></span>
+				<span asp-validation-for="Password" class="text-danger" id="passwordValid"></span>
 			</div>
 			<div class="text-center">
 				<button asp-action="Login" asp-controller="Account" type="submit" id="login" class="btn btn-primary">Войти</button>
@@ -27,4 +30,9 @@
 </div>
 
 
-
+<style>
+	#modelValid ul {
+		padding-left: 0;
+		list-style: none;
+	}
+</style>

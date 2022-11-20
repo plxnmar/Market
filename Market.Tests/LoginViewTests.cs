@@ -21,14 +21,14 @@ namespace Market.Tests
         }
 
         [Test]
-        public void CreateTitleTest()
+        public void TitleTest()
         {
             Assert.That("Вход - Market", Is.EqualTo(loginPage.Title));
         }
 
 
         [Test]
-        public void CreateDataTest()
+        public void CorrectDataTest()
         {
             loginPage.PopulateName("user123");
             loginPage.PopulatePassword("111");
@@ -36,6 +36,32 @@ namespace Market.Tests
 
             Assert.That("Home - Market", Is.EqualTo(homePage.Title));
         }
+
+        [Test]
+        public void EmptyDataTest()
+        {
+            loginPage.ClickCreate();
+
+            if (loginPage.ValidName.Length == 0)
+                throw new Exception("Сообщение о неверном имени не показалось");
+
+            if (loginPage.ValidPassword.Length == 0)
+                throw new Exception("Сообщение о неверном пароле не показалось");
+        }
+
+        [Test]
+        public void InvalidDataTest()
+        {
+            loginPage.PopulateName("111");
+            loginPage.PopulatePassword("111");
+
+            loginPage.ClickCreate();
+
+            if (loginPage.ValidModel.Length == 0)
+                throw new Exception("Сообщение о неверном пользователе не показалось");
+
+        }
+
 
         [TearDown]
         public void TearDown()
