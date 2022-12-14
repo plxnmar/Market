@@ -7,6 +7,7 @@ using Market.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,7 @@ string connection = builder.Configuration.GetConnectionString("DefaultConnection
 
 // добавляем контекст ApplicationContext в качестве сервиса в приложение
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection,
-    options => options.MigrationsAssembly("Market.DAL")));
+options => options.MigrationsAssembly("Market.DAL")));
 
 //services.AddControllersWithViews();
 
@@ -50,6 +51,13 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 
 
 var app = builder.Build();
+
+using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    context.Database.Migrate();
+}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

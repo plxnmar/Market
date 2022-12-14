@@ -9,13 +9,17 @@
 		</a>
 
 		<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+		@if ((Categories != null) && (Categories.Count() > 0))
+			{
 			@foreach (var category in Categories)
 			{
 				<li>
 					<a class="dropdown-item"
 			   asp-controller="Product" asp-action="GetCategoryProducts" asp-route-id="@category.Id">@category.Name</a>
 				</li>
+			}	
 			}
+			
 		</ul>
 	</div>
 }

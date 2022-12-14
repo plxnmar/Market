@@ -4,6 +4,7 @@ using Market.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Market.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221214185323_SeedData")]
+    partial class SeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -350,7 +353,6 @@ namespace Market.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            CartId = 1,
                             Name = "admin",
                             Password = "3DA24438DA894C18C863FFD9C9D2F1D6C98FE1633BEA6B56FE4EB1B95A927579",
                             RoleId = 1
@@ -358,7 +360,6 @@ namespace Market.DAL.Migrations
                         new
                         {
                             Id = 2,
-                            CartId = 2,
                             Name = "user123",
                             Password = "CBB9B63D553D88A72F0D8AFE8B14800A8511028FE03CD5D37D18B15B9E2A7BB8",
                             RoleId = 2
